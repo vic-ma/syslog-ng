@@ -24,7 +24,8 @@ EXTRA_DIST					+=	\
 	modules/basicfuncs/misc-funcs.c			\
 	modules/basicfuncs/list-funcs.c			\
 	modules/basicfuncs/tf-template.c		\
-	modules/basicfuncs/CMakeLists.txt
+	modules/basicfuncs/CMakeLists.txt		\
+	modules/basicfuncs/dcurrie-ascii85/ascii85.c
 
 modules/basicfuncs modules/basicfuncs/ mod-basicfuncs: modules/basicfuncs/libbasicfuncs.la
 .PHONY: modules/basicfuncs/ mod-basicfuncs

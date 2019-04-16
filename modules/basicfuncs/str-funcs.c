@@ -24,6 +24,8 @@
 
 #include <string.h>
 #include <ctype.h>
+#include <stdint.h>
+#include "dcurrie-ascii85/ascii85.c"
 
 static void
 _append_args_with_separator(gint argc, GString *argv[], GString *result, gchar separator)
@@ -368,7 +370,6 @@ tf_uppercase(LogMessage *msg, gint argc, GString *argv[], GString *result)
       g_free(new);
     }
 }
-
 TEMPLATE_FUNCTION_SIMPLE(tf_uppercase);
 
 void
@@ -629,3 +630,20 @@ tf_base64encode(LogMessage *msg, gint argc, GString *argv[], GString *result)
 };
 
 TEMPLATE_FUNCTION_SIMPLE(tf_base64encode);
+
+static void
+tf_base85encode(LogMessage *msg, gint argc, GString *argv[], GString *result)
+{
+  for (gint i = 0; i < argc; i++)
+    {
+      uint8_t *inp = (uint8_t *) argv[i]->str;           // Data to be encoded
+      int32_t out_max_length = 5*(argv[i]->len*1.25+1);  // Minimum space needed for encoded variable
+      uint8_t outp[out_max_length];                      // Encoded variable (holds encoded data)
+      encode_ascii85(inp, argv[i]->len, outp, out_max_length);
+      result = g_string_append(result, (gchar *) outp);
+      if (i < argc - 1)
+        g_string_append_c(result, ' ');  // Add space seperator
+    }
+}
+
+TEMPLATE_FUNCTION_SIMPLE(tf_base85encode);
