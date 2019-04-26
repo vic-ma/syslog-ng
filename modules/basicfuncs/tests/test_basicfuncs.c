@@ -199,6 +199,21 @@ Test(basicfuncs, test_str_funcs)
                          "[eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4"
                          "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4"
                          "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=]");
+
+  assert_template_format("[$(base85-encode)]", "[]");
+  assert_template_format("[$(base85-encode a)]", "[@/]");
+  assert_template_format("[$(base85-encode ab)]", "[@:B]");
+  assert_template_format("[$(base85-encode abc)]", "[@:E^]");
+  assert_template_format("[$(base85-encode abcd)]", "[@:E_W]");
+  assert_template_format("[$(base85-encode abcde)]", "[@:E_WAH]");
+  assert_template_format("[$(base85-encode abcxyz)]", "[@:E_kH$T]");
+  assert_template_format("[$(base85-encode abcdabcdabcdabcd)]", "[@:E_W@:E_W@:E_W@:E_W]");
+  assert_template_format("[$(base85-encode abcd abcd abcd abcd)]", "[@:E_W@:E_W@:E_W@:E_W]");
+  assert_template_format("[$(base85-encode 'X X')]", "[=<L]]");
+  assert_template_format("[$(base85-encode xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)]",
+                         "[G^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^"
+                         "+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^"
+                         "+IXG^+IXG^+IXG^+IXG^+IXG^+IXG^']");
 }
 
 Test(basicfuncs, test_numeric_funcs)
