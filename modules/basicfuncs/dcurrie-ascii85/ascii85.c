@@ -156,13 +156,8 @@ int32_t encode_ascii85 (const uint8_t *inp, int32_t in_length, uint8_t *outp, in
     }
 
     // Shouldn't need to do this -Victor
-    if (in_length == 4)
-    {
-        outp[5] = '\0';
-    }
-    else
-    {
-        outp[(int)(in_length*1.25)+1] = '\0';
-        return out_length;
-    }
+    int true_out_length;
+    true_out_length = (in_length/4)*5 + (in_length%4==0 ? 0 : in_length%4+1);
+    outp[true_out_length] = '\0';
+    return out_length;
 }
