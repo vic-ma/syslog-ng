@@ -26,8 +26,6 @@
 }
 
 %code {
-
-#include "static-file.h"
 #include "cfg-parser.h"
 #include "syslog-names.h"
 #include "messages.h"
@@ -56,7 +54,24 @@ start
   ;
 
 source_static_file
-  : KW_STATIC_FILE
+  : KW_STATIC_FILE '(' source_static_params ')' { $$ = $3 }
+  ;
+
+source_static_file_params
+  : string
     {
-      static_file_set_file(
+        last_driver = static_file_sd_new($3, configuration);
     }
+  : source_static_file_options { $$ = last_driver; free($1) }
+  ;
+
+source_static_file_options
+  : source_static_file_option source_static_file_options
+  |
+  ;
+
+source_static_file_option
+  : source_driver_option
+  ;
+
+%%

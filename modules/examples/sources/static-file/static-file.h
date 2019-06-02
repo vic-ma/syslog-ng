@@ -33,6 +33,6 @@ typedef struct _StaticFileSourceDriver
     StaticFileReader *file_reader;
 } StaticFileSourceDriver;
 
-LogDriver *static_file_sd_new(GlobalConfig *cfg);
+LogDriver *static_file_sd_new(gchar *filename, GlobalConfig *cfg);
 
 #endif

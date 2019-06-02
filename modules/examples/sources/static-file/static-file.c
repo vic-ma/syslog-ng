@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2018 Balabit
- * Copyright (c) 2018 László Várady <laszlo.varady@balabit.com>
+ * Copyright (c) 2019 Victor Ma
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 as published
@@ -22,3 +21,34 @@
  */
 
 #include "static-source.h"
+#include "driver.h"
+
+static gboolean
+static_file_sd_init(LogPipe *s)
+{
+  ;
+}
+
+static gboolean
+tatic_file_sd_deinit(LogPipe *s)
+{
+  ;
+}
+
+static gboolean
+tatic_file_sd_free(LogPipe *s)
+{
+  ;
+}
+
+static gboolean
+tatic_file_sd_queue(LogPipe *s, LogMessage *msg, const LogPathOptions *path_options)
+{
+  ;
+}
+
+LogDriver *
+static_file_sd_new(gchar *filename, GlobalConfig *cfg)
+{
+  ;
+}
