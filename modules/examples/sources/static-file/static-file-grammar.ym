@@ -26,11 +26,15 @@
 }
 
 %code {
+
+#include "static-file.h"
 #include "cfg-parser.h"
+#include "static-file-grammar.h"
 #include "syslog-names.h"
 #include "messages.h"
 #include "plugin.h"
 #include "cfg-grammar.h"
+#include "template/templates.h"
 
 #include <string.h>
 
@@ -43,9 +47,15 @@
 %parse-param {LogDriver **instance}
 %parse-param {gpointer arg}
 
-%token KW_STATIC_FILE
+/* INCLUDE_DECLS */
 
-%type <ptr> static_file
+%token KW_STATIC_FILE
+%token KW_TEMPLATE
+
+%type <ptr> source_static_file
+%type <ptr> source_static_file_params
+%type <ptr> source_static_file_options
+%type <ptr> source_static_file_option
 
 %%
 
@@ -54,24 +64,29 @@ start
   ;
 
 source_static_file
-  : KW_STATIC_FILE '(' source_static_params ')' { $$ = $3 }
+  : KW_STATIC_FILE '(' source_static_file_params ')'  { $$ = $3; }
   ;
 
 source_static_file_params
   : string
     {
-        last_driver = static_file_sd_new($3, configuration);
+      last_driver = static_file_sd_new($1, configuration);
     }
-  : source_static_file_options { $$ = last_driver; free($1) }
+  source_static_file_options
+    {
+      $$ = last_driver; free($1);
+    }
   ;
 
-source_static_file_options
-  : source_static_file_option source_static_file_options
+source_static_file_options:
+  source_static_file_option source_static_file_options
   |
   ;
 
 source_static_file_option
   : source_driver_option
   ;
+
+/* INCLUDE_RULES */
 
 %%

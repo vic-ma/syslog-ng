@@ -6,7 +6,7 @@ include modules/examples/sources/static-file/Makefile.am
 EXAMPLE_PLUGINS = \
   $(top_builddir)/modules/examples/sources/libmsg-generator.la \
   $(top_builddir)/modules/examples/sources/libthreaded-diskq-source.la \
-  $(top_builddir)/modules/examples/sources/static-file.la \
+  $(top_builddir)/modules/examples/sources/libstatic-file.la
 
 if HAVE_GETRANDOM
 EXAMPLE_PLUGINS += $(top_builddir)/modules/examples/sources/libthreaded-random-generator.la

@@ -20,7 +20,7 @@
  *
  */
 
-#include "static-source.h"
+#include "static-file.h"
 #include "driver.h"
 
 static gboolean
