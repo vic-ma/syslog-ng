@@ -31,7 +31,19 @@ int static_file_parse(CfgLexer *lexer, LogDriver **instance, gpointer arg);
 
 static CfgLexerKeyword static_file_keywords[] =
 {
-  { "static_file", KW_STATIC_FILE },
+  { "example_static_file", KW_STATIC_FILE },
   { NULL }
 };
 
+CfgParser static_file_parser =
+{
+#if ENABLE_DEBUG
+  .debug_flag = &static_file_debug,
+#endif
+  .name = "static_file_parser",
+  .keywords = static_file_keywords,
+  .parse = (gint (*)(CfgLexer *, gpointer *, gpointer)) static_file_parse,
+  .cleanup = (void (*)(gpointer)) log_pipe_unref,
+};
+
+CFG_PARSER_IMPLEMENT_LEXER_BINDING(static_file_, LogDriver **)

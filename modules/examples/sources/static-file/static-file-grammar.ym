@@ -30,11 +30,8 @@
 #include "static-file.h"
 #include "cfg-parser.h"
 #include "static-file-grammar.h"
-#include "syslog-names.h"
-#include "messages.h"
 #include "plugin.h"
 #include "cfg-grammar.h"
-#include "template/templates.h"
 
 #include <string.h>
 
@@ -50,7 +47,6 @@
 /* INCLUDE_DECLS */
 
 %token KW_STATIC_FILE
-%token KW_TEMPLATE
 
 %type <ptr> source_static_file
 %type <ptr> source_static_file_params
