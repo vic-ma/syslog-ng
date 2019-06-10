@@ -39,6 +39,8 @@
 
 %name-prefix "static_file_"
 
+
+/* Add additional parameters to lex and parse functions */
 %lex-param {CfgLexer *lexer}
 %parse-param {CfgLexer *lexer}
 %parse-param {LogDriver **instance}

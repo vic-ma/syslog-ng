@@ -68,7 +68,7 @@ static_file_sd_new(gchar *filename, GlobalConfig *cfg)
   printf("NEW\n");
   StaticFileSourceDriver *self = g_new0(StaticFileSourceDriver, 1);
 
-  /* Set default values for struct members */
+  /* Set defaults for struct members */
   log_src_driver_init_instance(&self->super, cfg);
 
   self->super.super.super.init = static_file_sd_init;
