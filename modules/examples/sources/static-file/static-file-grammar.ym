@@ -66,7 +66,7 @@ source_static_file
 source_static_file_params
   : string
     {
-      last_driver = static_file_sd_new($1, configuration);
+      last_driver = *instance = static_file_sd_new($1, configuration);
     }
   source_static_file_options
     {
