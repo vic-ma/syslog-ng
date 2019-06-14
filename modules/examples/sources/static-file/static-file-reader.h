@@ -20,20 +20,17 @@
  *
  */
 
-#ifndef STATIC_FILE_H
-#define STATIC_FILE_H
+#ifndef STATIC_FILE_READER_H
+#define STATIC_FILE_READER_H
 
-#include "static-file-reader.h"
-#include "driver.h"
 #include "logsource.h"
 
-typedef struct _StaticFileSourceDriver
+typedef struct _StaticFileReader
 {
-    LogSrcDriver super;
-    GString *filename;
-    StaticFileReader *reader;
-} StaticFileSourceDriver;
+    LogSource super;
+    FILE *file;
+} StaticFileReader;
 
-LogDriver *static_file_sd_new(gchar *filename, GlobalConfig *cfg);
+StaticFileReader *static_file_reader_new(const gchar *filename, GlobalConfig *cfg);
 
 #endif

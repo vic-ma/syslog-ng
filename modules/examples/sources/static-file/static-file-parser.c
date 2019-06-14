@@ -22,8 +22,8 @@
 
 
 #include "static-file.h"
-#include "cfg-parser.h"
 #include "static-file-grammar.h"
+#include "cfg-parser.h"
 
 extern int static_file_debug;
 

@@ -5,7 +5,9 @@ modules_examples_sources_libstatic_file_la_SOURCES = \
   modules/examples/sources/static-file/static-file-parser.c \
   modules/examples/sources/static-file/static-file-parser.h \
   modules/examples/sources/static-file/static-file.c \
-  modules/examples/sources/static-file/static-file.h
+  modules/examples/sources/static-file/static-file.h \
+  modules/examples/sources/static-file/static-file-reader.c \
+  modules/examples/sources/static-file/static-file-reader.h
 
 BUILT_SOURCES += \
   modules/examples/sources/static-file/static-file-grammar.y \

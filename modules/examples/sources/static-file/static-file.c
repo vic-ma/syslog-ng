@@ -21,34 +21,25 @@
  */
 
 #include "static-file.h"
-#include "driver.h"
-
-#define MAX_LINE_LENGTH 2000
-
-static void read_lines(StaticFileSourceDriver *self)
-{
-  gchar *line = g_malloc(MAX_LINE_LENGTH);
-  while (fgets(line, MAX_LINE_LENGTH, self->file) != NULL)
-    {
-      printf("%s", line);
-    }
-  g_free(line);
-}
 
 static gboolean
 static_file_sd_init(LogPipe *s)
 {
   printf("INIT\n");
 
-  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
-  self->file = fopen(self->filename->str, "r");
-
   /* Initialize stats */
   if (!log_src_driver_init_method(s))
     return FALSE;
 
-  read_lines(self);
-  return TRUE;
+  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
+  GlobalConfig *cfg = log_pipe_get_config(s);
+
+  /* Create reader LogSource and append this source driver to it */
+  self->reader = static_file_reader_new(self->filename->str, cfg);
+  log_pipe_append((LogPipe *) self->reader, s);
+
+  /* Run init functions of the reader */
+  return log_pipe_init(&self->reader->super.super);
 }
 
 static void
@@ -58,7 +49,7 @@ static_file_sd_free(LogPipe *s)
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
 
   g_string_free(self->filename, TRUE);
-  fclose(self->file);
+  fclose(self->reader->file);
   log_src_driver_free(s);
 }
 

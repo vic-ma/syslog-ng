@@ -20,20 +20,36 @@
  *
  */
 
-#ifndef STATIC_FILE_H
-#define STATIC_FILE_H
-
 #include "static-file-reader.h"
-#include "driver.h"
-#include "logsource.h"
 
-typedef struct _StaticFileSourceDriver
+#define MAX_LINE_LENGTH 2000
+
+static gboolean
+static_file_init(LogPipe *s)
 {
-    LogSrcDriver super;
-    GString *filename;
-    StaticFileReader *reader;
-} StaticFileSourceDriver;
+  StaticFileReader *self = (StaticFileReader *) s;
 
-LogDriver *static_file_sd_new(gchar *filename, GlobalConfig *cfg);
+  gchar *line = g_malloc(MAX_LINE_LENGTH);
+  while (fgets(line, MAX_LINE_LENGTH, self->file) != NULL)
+    {
+      printf("%s", line);
+    }
+  g_free(line);
 
-#endif
+  return TRUE;
+}
+
+
+StaticFileReader *
+static_file_reader_new(const gchar *filename, GlobalConfig *cfg)
+{
+  StaticFileReader *self = g_new0(StaticFileReader, 1);
+  self->file = fopen(filename, "r");
+
+  /* Set defaults for struct members */
+  log_source_init_instance(&self->super, cfg);
+
+  self->super.super.init = static_file_init;
+
+  return self;
+}

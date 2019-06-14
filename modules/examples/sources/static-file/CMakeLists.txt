@@ -3,6 +3,8 @@ add_library(static-file STATIC
   static-file-parser.h
   static-file.c
   static-file.h
+  static-file-reader.c
+  static-file-reader.h
   ${CMAKE_CURRENT_BINARY_DIR}/static-file-grammar.c
   ${CMAKE_CURRENT_BINARY_DIR}/static-file-grammar.h
 )
