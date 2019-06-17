@@ -32,5 +32,6 @@ typedef struct _StaticFileReader
 } StaticFileReader;
 
 StaticFileReader *static_file_reader_new(const gchar *filename, GlobalConfig *cfg);
+void read_file(StaticFileReader *self);
 
 #endif

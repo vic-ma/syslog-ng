@@ -34,12 +34,17 @@ static_file_sd_init(LogPipe *s)
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
   GlobalConfig *cfg = log_pipe_get_config(s);
 
-  /* Create reader LogSource and append this source driver to it */
   self->reader = static_file_reader_new(self->filename->str, cfg);
-  log_pipe_append((LogPipe *) self->reader, s);
+
+  log_source_options_init(&self->source_options.super, cfg, self->super.super.group);
+  log_source_set_options(&self->reader->super, &self->source_options.super, self->super.super.id,
+                         NULL, FALSE, FALSE, self->super.super.super.expr_node);
+
+  log_pipe_append(&self->reader->super.super, s);
 
   /* Run init functions of the reader */
-  return log_pipe_init(&self->reader->super.super);
+  if (!log_pipe_init(&self->reader->super.super))
+    return FALSE;
 }
 
 static void
@@ -61,6 +66,8 @@ static_file_sd_new(gchar *filename, GlobalConfig *cfg)
 
   /* Set defaults for struct members */
   log_src_driver_init_instance(&self->super, cfg);
+
+  log_source_options_defaults(&self->source_options.super);
 
   self->super.super.super.init = static_file_sd_init;
   self->super.super.super.free_fn = static_file_sd_free;

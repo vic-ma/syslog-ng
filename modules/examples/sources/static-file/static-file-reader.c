@@ -24,32 +24,36 @@
 
 #define MAX_LINE_LENGTH 2000
 
-static gboolean
-static_file_init(LogPipe *s)
+void
+read_file(StaticFileReader *self)
 {
-  StaticFileReader *self = (StaticFileReader *) s;
+  if (!log_source_free_to_send(&self->super))
+    return;
 
   gchar *line = g_malloc(MAX_LINE_LENGTH);
+  LogMessage *msg = log_msg_new_empty();
+
   while (fgets(line, MAX_LINE_LENGTH, self->file) != NULL)
     {
-      printf("%s", line);
+      log_msg_set_value(msg, LM_V_MESSAGE, line, -1);
+      printf("sending\n");
+      log_source_post(&self->super, msg);
+      printf("ending\n");
     }
+
   g_free(line);
-
-  return TRUE;
 }
-
 
 StaticFileReader *
 static_file_reader_new(const gchar *filename, GlobalConfig *cfg)
 {
+  printf("READER NEW\n");
+
   StaticFileReader *self = g_new0(StaticFileReader, 1);
   self->file = fopen(filename, "r");
 
   /* Set defaults for struct members */
   log_source_init_instance(&self->super, cfg);
-
-  self->super.super.init = static_file_init;
 
   return self;
 }
