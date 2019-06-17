@@ -24,10 +24,14 @@
 #define STATIC_FILE_READER_H
 
 #include "logsource.h"
+#include "timeutils/misc.h"
+
+#include <iv.h>
 
 typedef struct _StaticFileReader
 {
     LogSource super;
+    struct iv_timer timer;
     FILE *file;
 } StaticFileReader;
 

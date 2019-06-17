@@ -24,17 +24,41 @@
 
 #define MAX_LINE_LENGTH 2000
 
+static void
+start_timer(StaticFileReader *self)
+{
+  iv_validate_now();
+  self->timer.expires = iv_now;
+  iv_timer_register(&self->timer);
+}
+
+static void
+stop_timer(StaticFileReader *self)
+{
+  if (iv_timer_registered(&self->timer))
+    iv_timer_unregister(&self->timer);
+}
+
+
+static void
+timer_expired(void *cookie)
+{
+  StaticFileReader *self = (StaticFileReader *) cookie;
+  read_file(self);
+}
+
 void
 read_file(StaticFileReader *self)
 {
+  printf("READ\n");
   if (!log_source_free_to_send(&self->super))
     return;
 
   gchar *line = g_malloc(MAX_LINE_LENGTH);
-  LogMessage *msg = log_msg_new_empty();
 
   while (fgets(line, MAX_LINE_LENGTH, self->file) != NULL)
     {
+      LogMessage *msg = log_msg_new_empty();
       log_msg_set_value(msg, LM_V_MESSAGE, line, -1);
       printf("sending\n");
       log_source_post(&self->super, msg);
@@ -42,6 +66,26 @@ read_file(StaticFileReader *self)
     }
 
   g_free(line);
+}
+
+static gboolean
+static_file_reader_init(LogPipe *s)
+{
+  StaticFileReader *self = (StaticFileReader *) s;
+  if (!log_source_init(s))
+    return FALSE;
+
+  start_timer(self);
+
+  return TRUE;
+}
+
+static gboolean
+static_file_reader_deinit(LogPipe *s)
+{
+  StaticFileReader *self = (StaticFileReader *) s;
+  stop_timer(self);
+  return log_source_deinit(s);
 }
 
 StaticFileReader *
@@ -54,6 +98,13 @@ static_file_reader_new(const gchar *filename, GlobalConfig *cfg)
 
   /* Set defaults for struct members */
   log_source_init_instance(&self->super, cfg);
+
+  self->super.super.init = static_file_reader_init;
+  self->super.super.deinit = static_file_reader_deinit;
+
+  IV_TIMER_INIT(&self->timer);
+  self->timer.cookie = self;
+  self->timer.handler = timer_expired;
 
   return self;
 }
