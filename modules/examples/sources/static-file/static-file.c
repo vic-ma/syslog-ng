@@ -25,9 +25,6 @@
 static gboolean
 static_file_sd_init(LogPipe *s)
 {
-  printf("INIT\n");
-
-  /* Initialize stats */
   if (!log_src_driver_init_method(s))
     return FALSE;
 
@@ -39,10 +36,8 @@ static_file_sd_init(LogPipe *s)
   log_source_options_init(&self->source_options.super, cfg, self->super.super.group);
   log_source_set_options(&self->reader->super, &self->source_options.super, self->super.super.id,
                          NULL, FALSE, FALSE, self->super.super.super.expr_node);
-
   log_pipe_append(&self->reader->super.super, s);
 
-  /* Run init functions of the reader */
   if (!log_pipe_init(&self->reader->super.super))
     return FALSE;
 }
@@ -50,7 +45,6 @@ static_file_sd_init(LogPipe *s)
 static void
 static_file_sd_free(LogPipe *s)
 {
-  printf("FREE\n");
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
 
   g_string_free(self->filename, TRUE);
@@ -61,12 +55,9 @@ static_file_sd_free(LogPipe *s)
 LogDriver *
 static_file_sd_new(gchar *filename, GlobalConfig *cfg)
 {
-  printf("NEW\n");
   StaticFileSourceDriver *self = g_new0(StaticFileSourceDriver, 1);
 
-  /* Set defaults for struct members */
   log_src_driver_init_instance(&self->super, cfg);
-
   log_source_options_defaults(&self->source_options.super);
 
   self->super.super.super.init = static_file_sd_init;

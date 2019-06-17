@@ -50,7 +50,6 @@ timer_expired(void *cookie)
 void
 read_file(StaticFileReader *self)
 {
-  printf("READ\n");
   if (!log_source_free_to_send(&self->super))
     return;
 
@@ -60,9 +59,7 @@ read_file(StaticFileReader *self)
     {
       LogMessage *msg = log_msg_new_empty();
       log_msg_set_value(msg, LM_V_MESSAGE, line, -1);
-      printf("sending\n");
       log_source_post(&self->super, msg);
-      printf("ending\n");
     }
 
   g_free(line);
@@ -88,19 +85,25 @@ static_file_reader_deinit(LogPipe *s)
   return log_source_deinit(s);
 }
 
+static void
+static_file_reader_free(LogPipe *s)
+{
+  StaticFileReader *self = (StaticFileReader *) s;
+  fclose(self->file);
+  log_source_free(s);
+}
+
 StaticFileReader *
 static_file_reader_new(const gchar *filename, GlobalConfig *cfg)
 {
-  printf("READER NEW\n");
-
   StaticFileReader *self = g_new0(StaticFileReader, 1);
   self->file = fopen(filename, "r");
 
-  /* Set defaults for struct members */
   log_source_init_instance(&self->super, cfg);
 
   self->super.super.init = static_file_reader_init;
   self->super.super.deinit = static_file_reader_deinit;
+  self->super.super.free_fn = static_file_reader_free;
 
   IV_TIMER_INIT(&self->timer);
   self->timer.cookie = self;
