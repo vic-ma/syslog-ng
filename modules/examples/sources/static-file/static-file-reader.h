@@ -27,10 +27,16 @@
 
 #include <iv.h>
 
+typedef struct _StaticFileReaderOptions
+{
+    LogSourceOptions super;
+} StaticFileReaderOptions;
+
 typedef struct _StaticFileReader
 {
     LogSource super;
     struct iv_timer timer;
+    GString *filename;
     FILE *file;
 } StaticFileReader;
 

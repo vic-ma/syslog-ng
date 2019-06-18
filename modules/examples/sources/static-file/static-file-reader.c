@@ -69,6 +69,14 @@ static gboolean
 static_file_reader_init(LogPipe *s)
 {
   StaticFileReader *self = (StaticFileReader *) s;
+
+  self->file = fopen(self->filename->str, "r");
+  if (!self->file)
+    {
+      msg_error("Error: file not found", evt_tag_str("filename", self->filename->str));
+      return FALSE;
+    }
+
   if (!log_source_init(s))
     return FALSE;
 
@@ -89,6 +97,7 @@ static void
 static_file_reader_free(LogPipe *s)
 {
   StaticFileReader *self = (StaticFileReader *) s;
+  g_string_free(self->filename, TRUE);
   fclose(self->file);
   log_source_free(s);
 }
@@ -97,7 +106,8 @@ StaticFileReader *
 static_file_reader_new(const gchar *filename, GlobalConfig *cfg)
 {
   StaticFileReader *self = g_new0(StaticFileReader, 1);
-  self->file = fopen(filename, "r");
+
+  self->filename = g_string_new(filename);
 
   log_source_init_instance(&self->super, cfg);
 

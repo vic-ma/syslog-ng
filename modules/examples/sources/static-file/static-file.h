@@ -27,17 +27,12 @@
 #include "driver.h"
 #include "logsource.h"
 
-typedef struct _StaticFileSourceOptions
-{
-    LogSourceOptions super;
-} StaticFileSourceOptions;
-
 typedef struct _StaticFileSourceDriver
 {
     LogSrcDriver super;
-    StaticFileSourceOptions source_options;
     GString *filename;
     StaticFileReader *reader;
+    StaticFileReaderOptions reader_options;
 } StaticFileSourceDriver;
 
 LogDriver *static_file_sd_new(gchar *filename, GlobalConfig *cfg);
