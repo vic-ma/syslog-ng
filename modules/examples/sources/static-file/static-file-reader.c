@@ -98,7 +98,8 @@ static_file_reader_free(LogPipe *s)
 {
   StaticFileReader *self = (StaticFileReader *) s;
   g_string_free(self->filename, TRUE);
-  fclose(self->file);
+  if (self->file)
+    fclose(self->file);
   log_source_free(s);
 }
 

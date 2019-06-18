@@ -40,16 +40,32 @@ static_file_sd_init(LogPipe *s)
   log_pipe_append(&self->reader->super.super, s);
 
   if (!log_pipe_init(&self->reader->super.super))
-    return FALSE;
+    {
+      log_pipe_unref(&self->reader->super.super);
+      log_pipe_deinit(&self->reader->super.super);
+      return FALSE;
+    }
+  return TRUE;
+}
+
+static gboolean
+static_file_sd_deinit(LogPipe *s)
+{
+  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
+
+  log_pipe_deinit(&self->reader->super.super);
+
+  return log_src_driver_deinit_method(s);
 }
 
 static void
 static_file_sd_free(LogPipe *s)
 {
+  printf("FREE\n");
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
 
+  log_pipe_unref(&self->reader->super.super);
   g_string_free(self->filename, TRUE);
-  fclose(self->reader->file);
   log_src_driver_free(s);
 }
 
@@ -62,6 +78,7 @@ static_file_sd_new(gchar *filename, GlobalConfig *cfg)
   log_source_options_defaults(&self->reader_options.super);
 
   self->super.super.super.init = static_file_sd_init;
+  self->super.super.super.deinit = static_file_sd_deinit;
   self->super.super.super.free_fn = static_file_sd_free;
   self->filename = g_string_new(filename);
 
