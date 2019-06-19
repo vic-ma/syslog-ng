@@ -25,16 +25,16 @@
 
 #include "parser/parser-expr.h"
 
+#define ORDERED_PARSER_FLAGS_LETTERS 1
+#define ORDERED_PARSER_FLAGS_NUMBERS 2
+
 typedef struct _OrderedParser
 {
     LogParser super;
-    gint seperator_type;
     GString suffix;
+    guint32 flags;
 
 } OrderedParser;
-
-#define ORDERED_PARSER_FLAGS_LETTERS 1
-#define ORDERED_PARSER_FLAGS_NUMBERS 2
 
 LogParser *ordered_parser_new(GlobalConfig *cfg);
 gboolean ordered_parser_process_flag(LogParser *s, gchar *flag);

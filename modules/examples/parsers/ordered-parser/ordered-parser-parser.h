@@ -26,7 +26,7 @@
 #include "cfg-parser.h"
 #include "parser/parser-expr.h"
 
-extern CfgParser ordered_parser_parser;o
+extern CfgParser ordered_parser_parser;
 
 CFG_PARSER_DECLARE_LEXER_BINDING(ordered_parser_, LogParser **)
 

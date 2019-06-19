@@ -60,7 +60,7 @@ start
 parser_expr_ordered
     : KW_ORDERED_PARSER '('
       {
-        last_parser = *instance = (LogParser *) ordered_parser_new(configuration);
+        last_parser = *instance = ordered_parser_new(configuration);
       }
       parser_ordered_opts ')'
       {
@@ -75,10 +75,18 @@ parser_ordered_opts
 
 parser_ordered_opt
     : KW_FLAGS  '(' parser_ordered_flags ')'
-    : KW_SUFFIX '(' string ')' { ordered_parser_set_suffix(last_parser, $3); }
+    : KW_SUFFIX '(' string ')' { ordered_parser_set_suffix(last_parser, $3); free($3); }
+    : parser_opt
     ;
 
 parser_ordered_flags
-    :  string parser_ordered_flags { CHECK_ERROR(ordered_parser_process_flag(last_parser, $1), @1, "Unknown flag %s", $1); free($1); }
+    : string parser_ordered_flags
+      {
+        CHECK_ERROR(ordered_parser_process_flag(last_parser, $1), @1, "Invalid flag"); free($1);
+      }
     |
     ;
+
+/* INCLUDE_RULES */
+
+%%
