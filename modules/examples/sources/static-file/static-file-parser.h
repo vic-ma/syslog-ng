@@ -26,10 +26,8 @@
 #include "cfg-parser.h"
 #include "driver.h"
 
-/* Encapsulates parsing functionality */
 extern CfgParser static_file_parser;
 
-/* Declare lex and error functions */
 CFG_PARSER_DECLARE_LEXER_BINDING(static_file_, LogDriver **)
 
 #endif
