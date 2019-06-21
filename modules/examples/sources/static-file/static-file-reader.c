@@ -39,7 +39,6 @@ stop_timer(StaticFileReader *self)
     iv_timer_unregister(&self->timer);
 }
 
-
 static void
 timer_expired(void *cookie)
 {

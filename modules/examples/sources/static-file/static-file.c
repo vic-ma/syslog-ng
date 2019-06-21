@@ -42,7 +42,7 @@ static_file_sd_init(LogPipe *s)
   if (!log_pipe_init(&self->reader->super.super))
     {
       log_pipe_unref(&self->reader->super.super);
-      log_pipe_deinit(&self->reader->super.super);
+      self->reader = NULL;
       return FALSE;
     }
   return TRUE;
@@ -66,6 +66,7 @@ static_file_sd_free(LogPipe *s)
 
   log_pipe_unref(&self->reader->super.super);
   g_string_free(self->filename, TRUE);
+  log_source_options_destroy(&self->reader_options.super);
   log_src_driver_free(s);
 }
 
