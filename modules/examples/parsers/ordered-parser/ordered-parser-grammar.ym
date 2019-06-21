@@ -47,8 +47,6 @@
 /* INCLUDE_DECLS */
 
 %token  KW_ORDERED_PARSER
-%token  KW_LETTERS
-%token  KW_NUMBERS
 %token  KW_SUFFIX
 
 %type	<ptr> parser_expr_ordered
@@ -82,7 +80,7 @@ parser_ordered_opt
 parser_ordered_flags
     : string parser_ordered_flags
       {
-        CHECK_ERROR(ordered_parser_process_flag(last_parser, $1), @1, "Invalid flag"); free($1);
+        CHECK_ERROR(ordered_parser_process_flag(last_parser, $1), @1, "Unknown flag"); free($1);
       }
     |
     ;

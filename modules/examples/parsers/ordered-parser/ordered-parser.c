@@ -20,21 +20,35 @@
  *
  */
 
-#ifndef ORDERED_PARSER_H_INCLUDED
-#define ORDERED_PARSER_H_INCLUDED
+#include "ordered-parser.h"
 
-#include "parser/parser-expr.h"
-
-typedef struct _OrderedParser
+enum
 {
-    LogParser super;
-    GString suffix;
-    guint32 flags;
+  OPF_LETTERS = 0x0001,
+  OPF_NUMBERS = 0x0002,
+}
 
-} OrderedParser;
+CfgFlagHandler ordered_parser_flag_handlers[] =
+{
+    { "letters",        CFH_SET, offsetof(OrderedParser, flags), OPF_LETTERS},
+    { "numbers",        CFH_SET, offsetof(OrderedParser, flags), OPF_NUMBERS},
+    { NULL },
+};
 
-LogParser *ordered_parser_new(GlobalConfig *cfg);
-gboolean ordered_parser_process_flag(LogParser *s, gchar *flag);
-void ordered_parser_set_suffix(LogParser *s, gchar *suffix);
+gboolean
+ordered_parser_set_flag(LogParser *s, const gchar *flag)
+{
+  OrderedParser *self = (OrderedParser *) s;
 
-#endif
+  cfg_process_flag(ordered_parser_flag_handlers, self, flag);
+}
+
+LogParser *
+ordered_parser_new(GlobalConfig *cfg)
+{
+  OrderedParser *self = g_new0(OrderedParser, 1);
+
+  log_parser_init_instance(&self->super, cfg);
+
+  return &self->super;
+}
