@@ -43,12 +43,52 @@ ordered_parser_set_flag(LogParser *s, const gchar *flag)
   cfg_process_flag(ordered_parser_flag_handlers, self, flag);
 }
 
+void
+ordered_parser_set_suffix(LogParser *s, gchar *suffix)
+{
+  OrderedParser *self = (OrderedParser *) s;
+  s->suffix = suffix;
+}
+
+static LogPipe *
+ordered_parser_clone(LogPipe *s)
+{
+  OrderedParser *self = (OrderedParser *) s;
+
+  OrderedParser *cloned;
+  cloned = ordered_parser_new(s->cfg);
+
+  cloned->suffix = g_string_new(self->suffix->str);
+
+  return &cloned->super;
+}
+
+static gboolean
+ordered_parser_process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
+                       const gchar *input, gsize input_len)
+{
+  ;
+}
+
+static void
+ordered_parser_free(LogPipe *s)
+{
+  OrderedParser *self = (OrderedParser *) s;
+
+  g_string_free(s->suffix);
+
+  log_parser_free_method(s);
+}
+
 LogParser *
 ordered_parser_new(GlobalConfig *cfg)
 {
   OrderedParser *self = g_new0(OrderedParser, 1);
 
   log_parser_init_instance(&self->super, cfg);
+
+  self->super.super.free_fn = ordered_parser_free;
+  self->super.clone = ordered_parser_clone;
 
   return &self->super;
 }

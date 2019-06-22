@@ -30,7 +30,6 @@ typedef struct _OrderedParser
     LogParser super;
     GString suffix;
     guint32 flags;
-
 } OrderedParser;
 
 LogParser *ordered_parser_new(GlobalConfig *cfg);
