@@ -30,11 +30,11 @@
 typedef struct _StaticFileSourceDriver
 {
     LogSrcDriver super;
+    GString *pathname;
     StaticFileReader *reader;
-    StaticFileReaderOptions reader_options;
-    GString *filename;
+    StaticFileReaderOptions options;
 } StaticFileSourceDriver;
 
-LogDriver *static_file_sd_new(gchar *filename, GlobalConfig *cfg);
+LogDriver *static_file_sd_new(gchar *pathname, GlobalConfig *cfg);
 
 #endif

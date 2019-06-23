@@ -24,23 +24,28 @@
 #define STATIC_FILE_READER_H
 
 #include "logsource.h"
-
-#include <iv.h>
+#include "logreader.h"
+#include "driver.h"
 
 typedef struct _StaticFileReaderOptions
 {
-    LogSourceOptions super;
+    LogReaderOptions reader_options;
 } StaticFileReaderOptions;
 
 typedef struct _StaticFileReader
 {
-    LogSource super;
-    struct iv_timer timer;
-    GString *filename;
-    FILE *file;
+    LogPipe super;
+    LogReader *reader;
+    StaticFileReaderOptions *options;
+    LogSrcDriver *owner;
+    GString *pathname;
+    gint file;
 } StaticFileReader;
 
-StaticFileReader *static_file_reader_new(const gchar *filename, GlobalConfig *cfg);
-void read_file(StaticFileReader *self);
+void static_file_reader_options_defaults(StaticFileReaderOptions *options);
+void static_file_reader_options_init(StaticFileReaderOptions *options, GlobalConfig *cfg, const gchar *group);
+
+StaticFileReader *static_file_reader_new(const gchar *pathname, StaticFileReaderOptions *options,
+                                        LogSrcDriver *owner, GlobalConfig *cfg);
 
 #endif

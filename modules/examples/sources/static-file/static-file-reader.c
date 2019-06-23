@@ -19,49 +19,61 @@
  * COPYING for details.
  *
  */
+#include <unistd.h>
+#include <fcntl.h>
 
 #include "static-file-reader.h"
+#include "poll-fd-events.h"
+#include "logproto/logproto-multiline-server.h"
+#include "transport/transport-file.h"
 
-#define MAX_LINE_LENGTH 2000
-
-static void
-start_timer(StaticFileReader *self)
+void
+static_file_reader_options_defaults(StaticFileReaderOptions *options)
 {
-  iv_validate_now();
-  self->timer.expires = iv_now;
-  iv_timer_register(&self->timer);
-}
-
-static void
-stop_timer(StaticFileReader *self)
-{
-  if (iv_timer_registered(&self->timer))
-    iv_timer_unregister(&self->timer);
-}
-
-static void
-timer_expired(void *cookie)
-{
-  StaticFileReader *self = (StaticFileReader *) cookie;
-  read_file(self);
+  log_source_options_defaults(&options->reader_options.super);
 }
 
 void
-read_file(StaticFileReader *self)
+static_file_reader_options_init(StaticFileReaderOptions *options, GlobalConfig *cfg, const gchar *group)
 {
-  if (!log_source_free_to_send(&self->super))
-    return;
+  log_source_options_init(&options->reader_options.super, cfg, group);
+}
 
-  gchar *line = g_malloc(MAX_LINE_LENGTH);
+static LogTransport *
+_construct_transport(gint fd)
+{
 
-  while (fgets(line, MAX_LINE_LENGTH, self->file) != NULL)
-    {
-      LogMessage *msg = log_msg_new_empty();
-      log_msg_set_value(msg, LM_V_MESSAGE, line, -1);
-      log_source_post(&self->super, msg);
-    }
+}
 
-  g_free(line);
+static LogProtoServer *
+_construct_proto(StaticFileReader *self)
+{
+  LogProtoServerOptions *proto_options = &self->options->reader_options.proto_options.super;
+
+  LogTransport *transport = log_transport_file_new(self->file);
+  transport->read = log_transport_file_read_and_ignore_eof_method;
+
+  proto_options->position_tracking_enabled = FALSE;
+
+  return NULL;
+  return log_proto_multiline_server_new(transport, (LogProtoMultiLineServerOptions *) proto_options);
+}
+
+static void
+_setup_logreader(LogPipe *s, PollEvents *poll_events, LogProtoServer *proto)
+{
+  StaticFileReader *self = (StaticFileReader *) s;
+
+  self->reader = log_reader_new(log_pipe_get_config(s));
+  log_reader_open(self->reader, proto, poll_events);
+  log_reader_set_options(self->reader,
+                         s,
+                         &self->options->reader_options,
+                         self->owner->super.id,
+                         self->pathname->str);
+
+  log_reader_set_immediate_check(self->reader);
+  log_pipe_append((LogPipe *) self->reader, s);
 }
 
 static gboolean
@@ -69,18 +81,27 @@ static_file_reader_init(LogPipe *s)
 {
   StaticFileReader *self = (StaticFileReader *) s;
 
-  self->file = fopen(self->filename->str, "r");
-  if (!self->file)
+  if((self->file = open(self->pathname->str, O_RDONLY)) == -1)
     {
-      msg_error("Error: file not found", evt_tag_str("filename", self->filename->str));
+      msg_error("Error: file not found", evt_tag_str("pathname", self->pathname->str));
       return FALSE;
     }
 
-  if (!log_source_init(s))
-    return FALSE;
+  PollEvents *poll_events = poll_fd_events_new(self->file);
 
-  start_timer(self);
+  LogProtoServer *proto = _construct_proto(self);
 
+  _setup_logreader(s, poll_events, proto);
+
+  if (!log_pipe_init(((LogPipe *) self->reader)))
+    {
+      msg_error("Error initializing log_reader, closing file",
+                evt_tag_int("fd", self->file));
+      log_pipe_unref((LogPipe *) self->reader);
+      self->reader = NULL;
+      close(self->file);
+      return FALSE;
+    }
   return TRUE;
 }
 
@@ -88,36 +109,28 @@ static gboolean
 static_file_reader_deinit(LogPipe *s)
 {
   StaticFileReader *self = (StaticFileReader *) s;
-  stop_timer(self);
-  return log_source_deinit(s);
 }
 
 static void
 static_file_reader_free(LogPipe *s)
 {
   StaticFileReader *self = (StaticFileReader *) s;
-  g_string_free(self->filename, TRUE);
-  if (self->file)
-    fclose(self->file);
-  log_source_free(s);
 }
 
 StaticFileReader *
-static_file_reader_new(const gchar *filename, GlobalConfig *cfg)
+static_file_reader_new(const gchar *pathname, StaticFileReaderOptions *options, LogSrcDriver *owner,
+                       GlobalConfig *cfg)
 {
   StaticFileReader *self = g_new0(StaticFileReader, 1);
 
-  self->filename = g_string_new(filename);
+  log_pipe_init_instance (&self->super, cfg);
+  self->super.init = static_file_reader_init;
+  self->super.deinit = static_file_reader_deinit;
+  self->super.free_fn = static_file_reader_free;
 
-  log_source_init_instance(&self->super, cfg);
-
-  self->super.super.init = static_file_reader_init;
-  self->super.super.deinit = static_file_reader_deinit;
-  self->super.super.free_fn = static_file_reader_free;
-
-  IV_TIMER_INIT(&self->timer);
-  self->timer.cookie = self;
-  self->timer.handler = timer_expired;
+  self->pathname = g_string_new (pathname);
+  self->options = options;
+  self->owner = owner;
 
   return self;
 }
