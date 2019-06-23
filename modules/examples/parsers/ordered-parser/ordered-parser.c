@@ -47,7 +47,7 @@ void
 ordered_parser_set_suffix(LogParser *s, gchar *suffix)
 {
   OrderedParser *self = (OrderedParser *) s;
-  s->suffix = suffix;
+  self->suffix = g_string_new(suffix);
 }
 
 static LogPipe *
@@ -58,7 +58,9 @@ ordered_parser_clone(LogPipe *s)
   OrderedParser *cloned;
   cloned = ordered_parser_new(s->cfg);
 
+  cloned->super = self->super;
   cloned->suffix = g_string_new(self->suffix->str);
+  cloned->flags = self->flags;
 
   return &cloned->super;
 }

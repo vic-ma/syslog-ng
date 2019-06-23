@@ -49,11 +49,11 @@
 %token  KW_ORDERED_PARSER
 %token  KW_SUFFIX
 
-%type	<ptr> parser_expr_ordered
+%type <ptr> parser_expr_ordered
 
 start
-	: LL_CONTEXT_PARSER parser_expr_ordered { YYACCEPT; }
-	;
+    : LL_CONTEXT_PARSER parser_expr_ordered { YYACCEPT; }
+    ;
 
 parser_expr_ordered
     : KW_ORDERED_PARSER '('
