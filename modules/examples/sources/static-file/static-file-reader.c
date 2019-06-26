@@ -36,13 +36,7 @@ static_file_reader_options_defaults(StaticFileReaderOptions *options)
 void
 static_file_reader_options_init(StaticFileReaderOptions *options, GlobalConfig *cfg, const gchar *group)
 {
-  log_source_options_init(&options->reader_options.super, cfg, group);
-}
-
-static LogTransport *
-_construct_transport(gint fd)
-{
-
+  log_reader_options_init(&options->reader_options, cfg, group);
 }
 
 static LogProtoServer *
@@ -51,12 +45,10 @@ _construct_proto(StaticFileReader *self)
   LogProtoServerOptions *proto_options = &self->options->reader_options.proto_options.super;
 
   LogTransport *transport = log_transport_file_new(self->file);
-  transport->read = log_transport_file_read_and_ignore_eof_method;
 
   proto_options->position_tracking_enabled = FALSE;
 
-  return NULL;
-  return log_proto_multiline_server_new(transport, (LogProtoMultiLineServerOptions *) proto_options);
+  return log_proto_text_server_new(transport, proto_options);
 }
 
 static void
@@ -128,7 +120,7 @@ static_file_reader_new(const gchar *pathname, StaticFileReaderOptions *options, 
   self->super.deinit = static_file_reader_deinit;
   self->super.free_fn = static_file_reader_free;
 
-  self->pathname = g_string_new (pathname);
+  self->pathname = g_string_new(pathname);
   self->options = options;
   self->owner = owner;
 

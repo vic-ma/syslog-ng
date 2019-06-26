@@ -36,7 +36,6 @@ static_file_sd_init(LogPipe *s)
   self->reader = static_file_reader_new(self->pathname->str, &self->options, &self->super, cfg);
 
   log_pipe_append(&self->reader->super, s);
-
   return log_pipe_init(&self->reader->super);
 }
 
@@ -61,13 +60,16 @@ static_file_sd_new(gchar *pathname, GlobalConfig *cfg)
 {
   StaticFileSourceDriver *self = g_new0(StaticFileSourceDriver, 1);
 
-  self->pathname = g_string_new(pathname);
-  static_file_reader_options_defaults(&self->options);
-
   log_src_driver_init_instance(&self->super, cfg);
   self->super.super.super.init = static_file_sd_init;
   self->super.super.super.deinit = static_file_sd_deinit;
   self->super.super.super.free_fn = static_file_sd_free;
+
+  self->pathname = g_string_new(pathname);
+
+  static_file_reader_options_defaults(&self->options);
+  self->options.reader_options.super.stats_level = STATS_LEVEL1;
+  self->options.reader_options.super.stats_source = SCS_FILE;
 
   return &self->super.super;
 }
