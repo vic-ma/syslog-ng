@@ -44,10 +44,33 @@ ordered_parser_set_flag(LogParser *s, const gchar *flag)
 }
 
 void
-ordered_parser_set_suffix(LogParser *s, gchar *suffix)
+ordered_parser_suffix_valid(gchar suffix)
+{
+  return (c != ' '  && c != '\'' && c != '\"' );
+}
+
+void
+ordered_parser_set_suffix(LogParser *s, gchar suffix)
 {
   OrderedParser *self = (OrderedParser *) s;
-  self->suffix = g_string_new(suffix);
+  self->suffix = suffix;
+}
+
+static gboolean
+ordered_parser_process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
+                       const gchar *input, gsize input_len)
+{
+  OrderedParser *self = (OrderedParser *) s;
+
+  KVScanner kv_scanner;
+  kv_scanner_init(&kv_scanner, self->suffix, " ", FALSE);
+  kv_scanner_input(&kv_scanner, input);
+
+  LogMessage *msg = log_msg_make_writable(pmsg, path_options);
+  msg_trace("ordered-parser message processing started",
+            evt_tag_str ("input", input),
+            evt_tag_printf("msg", "%p", *pmsg));
+
 }
 
 static LogPipe *
@@ -56,20 +79,13 @@ ordered_parser_clone(LogPipe *s)
   OrderedParser *self = (OrderedParser *) s;
 
   OrderedParser *cloned;
-  cloned = ordered_parser_new(s->cfg);
+  cloned = ordered_parser_new(log_pipe_get_config(s));
 
   cloned->super = self->super;
   cloned->suffix = g_string_new(self->suffix->str);
   cloned->flags = self->flags;
 
   return &cloned->super;
-}
-
-static gboolean
-ordered_parser_process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
-                       const gchar *input, gsize input_len)
-{
-  ;
 }
 
 static void
@@ -91,6 +107,9 @@ ordered_parser_new(GlobalConfig *cfg)
 
   self->super.super.free_fn = ordered_parser_free;
   self->super.clone = ordered_parser_clone;
+
+  self->suffix = g_string_new(")");
+  self->flags = 0x0000;
 
   return &self->super;
 }

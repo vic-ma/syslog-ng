@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2019 Victor Ma
- *
+g*
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 as published
  * by the Free Software Foundation, or (at your option) any later version.
@@ -28,12 +28,13 @@
 typedef struct _OrderedParser
 {
     LogParser super;
-    GString suffix;
+    gchar suffix;
     guint32 flags;
 } OrderedParser;
 
 LogParser *ordered_parser_new(GlobalConfig *cfg);
 gboolean ordered_parser_process_flag(LogParser *s, gchar *flag);
-void ordered_parser_set_suffix(LogParser *s, gchar *suffix);
+void ordered_parser_suffix_valid(gchar suffix);
+void ordered_parser_set_suffix(LogParser *s, gchar suffix);
 
 #endif

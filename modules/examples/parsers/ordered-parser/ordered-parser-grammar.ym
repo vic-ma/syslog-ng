@@ -73,7 +73,13 @@ parser_ordered_opts
 
 parser_ordered_opt
     : KW_FLAGS  '(' parser_ordered_flags ')'
-    : KW_SUFFIX '(' string ')' { ordered_parser_set_suffix(last_parser, $3); free($3); }
+    : KW_SUFFIX '(' string ')'
+      {
+        CHECK_ERROR((strlen($3)==1), @3, "Suffix must be a single character");
+        CHECK_ERROR((ordered_parser_suffix_valid($3[0])), @3, "Suffix character unsupported");
+        ordered_parser_set_suffix(last_parser, $3)
+        free($3);
+      }
     : parser_opt
     ;
 
