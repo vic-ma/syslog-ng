@@ -33,6 +33,8 @@ extern CfgParser threaded_random_generator_parser;
 
 extern CfgParser threaded_diskq_source_parser;
 
+extern CfgParser ordered_parser_parser;
+
 static Plugin example_plugins[] =
 {
   {
@@ -51,6 +53,11 @@ static Plugin example_plugins[] =
     .type = LL_CONTEXT_SOURCE,
     .name = "example_diskq_source",
     .parser = &threaded_diskq_source_parser,
+  },
+  {
+    .type = LL_CONTEXT_PARSER,
+    .name = "example_ordered_parser",
+    .parser = &ordered_parser_parser,
   },
 };
 

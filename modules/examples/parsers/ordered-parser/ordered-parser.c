@@ -26,7 +26,7 @@ enum
 {
   OPF_LETTERS = 0x0001,
   OPF_NUMBERS = 0x0002,
-}
+};
 
 CfgFlagHandler ordered_parser_flag_handlers[] =
 {
@@ -43,10 +43,10 @@ ordered_parser_set_flag(LogParser *s, const gchar *flag)
   cfg_process_flag(ordered_parser_flag_handlers, self, flag);
 }
 
-void
+gboolean
 ordered_parser_suffix_valid(gchar suffix)
 {
-  return (c != ' '  && c != '\'' && c != '\"' );
+  return (suffix != ' '  && suffix != '\'' && suffix != '\"' );
 }
 
 void
@@ -57,7 +57,7 @@ ordered_parser_set_suffix(LogParser *s, gchar suffix)
 }
 
 static gboolean
-ordered_parser_process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
+_process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
                        const gchar *input, gsize input_len)
 {
   OrderedParser *self = (OrderedParser *) s;
@@ -71,10 +71,16 @@ ordered_parser_process(LogParser *s, LogMessage **pmsg, const LogPathOptions *pa
             evt_tag_str ("input", input),
             evt_tag_printf("msg", "%p", *pmsg));
 
+  while (kv_scanner_scan_next(&kv_scanner))
+    {
+      ;  //TODO
+    }
+
+  return TRUE;
 }
 
 static LogPipe *
-ordered_parser_clone(LogPipe *s)
+_clone(LogPipe *s)
 {
   OrderedParser *self = (OrderedParser *) s;
 
@@ -89,7 +95,7 @@ ordered_parser_clone(LogPipe *s)
 }
 
 static void
-ordered_parser_free(LogPipe *s)
+_free(LogPipe *s)
 {
   OrderedParser *self = (OrderedParser *) s;
 
@@ -105,8 +111,8 @@ ordered_parser_new(GlobalConfig *cfg)
 
   log_parser_init_instance(&self->super, cfg);
 
-  self->super.super.free_fn = ordered_parser_free;
-  self->super.clone = ordered_parser_clone;
+  self->super.super.free_fn = _free;
+  self->super.super.clone = _clone;
 
   self->suffix = g_string_new(")");
   self->flags = 0x0000;
