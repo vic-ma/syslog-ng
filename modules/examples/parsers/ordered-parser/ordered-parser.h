@@ -33,7 +33,7 @@ typedef struct _OrderedParser
 } OrderedParser;
 
 LogParser *ordered_parser_new(GlobalConfig *cfg);
-gboolean ordered_parser_process_flag(LogParser *s, gchar *flag);
+gboolean ordered_parser_process_flag(LogParser *s, const gchar *flag);
 gboolean ordered_parser_suffix_valid(gchar suffix);
 void ordered_parser_set_suffix(LogParser *s, gchar suffix);
 

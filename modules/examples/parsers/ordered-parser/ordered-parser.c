@@ -21,6 +21,7 @@
  */
 
 #include "ordered-parser.h"
+#include "scanner/kv-scanner/kv-scanner.h"
 
 enum
 {
@@ -36,8 +37,9 @@ CfgFlagHandler ordered_parser_flag_handlers[] =
 };
 
 gboolean
-ordered_parser_set_flag(LogParser *s, const gchar *flag)
+ordered_parser_process_flag(LogParser *s, const gchar *flag)
 {
+  printf("FLAG\n");
   OrderedParser *self = (OrderedParser *) s;
 
   cfg_process_flag(ordered_parser_flag_handlers, self, flag);
@@ -52,6 +54,7 @@ ordered_parser_suffix_valid(gchar suffix)
 void
 ordered_parser_set_suffix(LogParser *s, gchar suffix)
 {
+  printf("SUFFIX\n");
   OrderedParser *self = (OrderedParser *) s;
   self->suffix = suffix;
 }
@@ -60,6 +63,7 @@ static gboolean
 _process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
                        const gchar *input, gsize input_len)
 {
+  printf("PROCESS\n");
   OrderedParser *self = (OrderedParser *) s;
 
   KVScanner kv_scanner;
@@ -73,7 +77,9 @@ _process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
 
   while (kv_scanner_scan_next(&kv_scanner))
     {
-      ;  //TODO
+      const gchar *current_key = kv_scanner_get_current_key(&kv_scanner);
+      const gchar *current_value = kv_scanner_get_current_value(&kv_scanner);
+      log_msg_set_value_by_name(*pmsg, current_key, current_value, -1);
     }
 
   return TRUE;
@@ -82,24 +88,23 @@ _process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
 static LogPipe *
 _clone(LogPipe *s)
 {
+  printf("CLONE\n");
   OrderedParser *self = (OrderedParser *) s;
 
   OrderedParser *cloned;
-  cloned = ordered_parser_new(log_pipe_get_config(s));
+  cloned = (OrderedParser *) ordered_parser_new(log_pipe_get_config(s));
 
   cloned->super = self->super;
-  cloned->suffix = g_string_new(self->suffix->str);
+  cloned->suffix = self->suffix;
   cloned->flags = self->flags;
 
-  return &cloned->super;
+  return &cloned->super.super;
 }
 
 static void
 _free(LogPipe *s)
 {
   OrderedParser *self = (OrderedParser *) s;
-
-  g_string_free(s->suffix);
 
   log_parser_free_method(s);
 }
@@ -111,10 +116,11 @@ ordered_parser_new(GlobalConfig *cfg)
 
   log_parser_init_instance(&self->super, cfg);
 
+  self->super.process = _process;
   self->super.super.free_fn = _free;
   self->super.super.clone = _clone;
 
-  self->suffix = g_string_new(")");
+  self->suffix = ')';
   self->flags = 0x0000;
 
   return &self->super;
