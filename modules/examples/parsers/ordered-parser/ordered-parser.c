@@ -39,7 +39,6 @@ CfgFlagHandler ordered_parser_flag_handlers[] =
 gboolean
 ordered_parser_process_flag(LogParser *s, const gchar *flag)
 {
-  printf("FLAG\n");
   OrderedParser *self = (OrderedParser *) s;
 
   cfg_process_flag(ordered_parser_flag_handlers, self, flag);
@@ -59,16 +58,42 @@ ordered_parser_set_suffix(LogParser *s, gchar suffix)
   self->suffix = suffix;
 }
 
+static char *
+_format_input(const gchar *input, gchar suffix)
+{
+  GString *formatted = g_string_sized_new(strlen(input));
+  gboolean finding_spaces = FALSE;
+  gchar current;
+
+  while ((current = *input++) != '\0')
+    {
+      if (!finding_spaces)
+        {
+          if (current == suffix)
+            finding_spaces = TRUE;
+          g_string_append_c(formatted, current);
+        }
+      else if (finding_spaces && current != ' ')
+        {
+          g_string_append_c(formatted, current);
+          finding_spaces = FALSE;
+        }
+    }
+
+  return g_string_free(formatted, FALSE);
+}
+
 static gboolean
 _process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
-                       const gchar *input, gsize input_len)
+         const gchar *input, gsize input_len)
 {
-  printf("PROCESS\n");
   OrderedParser *self = (OrderedParser *) s;
 
   KVScanner kv_scanner;
   kv_scanner_init(&kv_scanner, self->suffix, " ", FALSE);
-  kv_scanner_input(&kv_scanner, input);
+
+  gchar *formatted_input = _format_input(input, self->suffix);
+  kv_scanner_input(&kv_scanner, formatted_input);
 
   LogMessage *msg = log_msg_make_writable(pmsg, path_options);
   msg_trace("ordered-parser message processing started",
@@ -82,13 +107,13 @@ _process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
       log_msg_set_value_by_name(*pmsg, current_key, current_value, -1);
     }
 
+  g_free(formatted_input);
   return TRUE;
 }
 
 static LogPipe *
 _clone(LogPipe *s)
 {
-  printf("CLONE\n");
   OrderedParser *self = (OrderedParser *) s;
 
   OrderedParser *cloned;
@@ -101,14 +126,6 @@ _clone(LogPipe *s)
   return &cloned->super.super;
 }
 
-static void
-_free(LogPipe *s)
-{
-  OrderedParser *self = (OrderedParser *) s;
-
-  log_parser_free_method(s);
-}
-
 LogParser *
 ordered_parser_new(GlobalConfig *cfg)
 {
@@ -117,7 +134,6 @@ ordered_parser_new(GlobalConfig *cfg)
   log_parser_init_instance(&self->super, cfg);
 
   self->super.process = _process;
-  self->super.super.free_fn = _free;
   self->super.super.clone = _clone;
 
   self->suffix = ')';
