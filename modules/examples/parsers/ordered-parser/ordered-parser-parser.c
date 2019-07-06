@@ -31,7 +31,7 @@ int ordered_parser_parse(CfgLexer *lexer, LogParser **instance, gpointer arg);
 static CfgLexerKeyword ordered_parser_keywords[] =
 {
   { "example_ordered_parser", KW_ORDERED_PARSER },
-  { "suffix",         KW_SUFFIX },
+  { "suffix",                 KW_SUFFIX },
   { NULL }
 };
 

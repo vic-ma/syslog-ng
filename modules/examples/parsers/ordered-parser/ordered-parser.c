@@ -53,7 +53,6 @@ ordered_parser_suffix_valid(gchar suffix)
 void
 ordered_parser_set_suffix(LogParser *s, gchar suffix)
 {
-  printf("SUFFIX\n");
   OrderedParser *self = (OrderedParser *) s;
   self->suffix = suffix;
 }
@@ -95,7 +94,7 @@ _process(LogParser *s, LogMessage **pmsg, const LogPathOptions *path_options,
   gchar *formatted_input = _format_input(input, self->suffix);
   kv_scanner_input(&kv_scanner, formatted_input);
 
-  LogMessage *msg = log_msg_make_writable(pmsg, path_options);
+  log_msg_make_writable(pmsg, path_options);
   msg_trace("ordered-parser message processing started",
             evt_tag_str ("input", input),
             evt_tag_printf("msg", "%p", *pmsg));
