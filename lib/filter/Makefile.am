@@ -12,7 +12,8 @@ filterinclude_HEADERS = 			\
 	lib/filter/filter-re.h			\
 	lib/filter/filter-pri.h			\
 	lib/filter/filter-pipe.h		\
-	lib/filter/filter-expr-parser.h
+	lib/filter/filter-expr-parser.h \
+	lib/filter/filter-length.h
 
 filter_sources = 				\
 	lib/filter/filter-expr.c		\
@@ -26,6 +27,7 @@ filter_sources = 				\
 	lib/filter/filter-re.c			\
 	lib/filter/filter-pri.c			\
 	lib/filter/filter-pipe.c		\
+	lib/filter/filter-length.c		\
 	lib/filter/filter-expr-parser.c		\
 	lib/filter/filter-expr-grammar.y
 

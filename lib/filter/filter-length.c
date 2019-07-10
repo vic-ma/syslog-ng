@@ -30,7 +30,7 @@ typedef struct _FilterLength
 
 static gboolean
 
-filter_length_eval(FilterExprNode *s, LogMessage **msg, gint num_msg)
+filter_length_eval(FilterExprNode *s, LogMessage **msgs, gint num_msg)
 {
   FilterLength *self = (FilterLength *) s;
   LogMessage *msg = msgs[num_msg - 1];
