@@ -29,9 +29,12 @@ typedef struct _FilterLength
 } FilterLength;
 
 static gboolean
-filter_length_eval(FilterExprNode *s, GlobalConfig *cfg)
+
+filter_length_eval(FilterExprNode *s, LogMessage **msg, gint num_msg)
 {
   FilterLength *self = (FilterLength *) s;
+  LogMessage *msg = msgs[num_msg - 1];
+  return TRUE;
 }
 
 FilterExprNode *
