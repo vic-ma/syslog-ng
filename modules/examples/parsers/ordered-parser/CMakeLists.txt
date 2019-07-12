@@ -1,8 +1,8 @@
 add_library(ordered-parser STATIC
-  ordered-parser-parser.c
-  ordered-parser-parser.h
   ordered-parser.c
   ordered-parser.h
+  ordered-parser-parser.c
+  ordered-parser-parser.h
   ${CMAKE_CURRENT_BINARY_DIR}/ordered-parser-grammar.c
   ${CMAKE_CURRENT_BINARY_DIR}/ordered-parser-grammar.h
 )
@@ -18,3 +18,5 @@ bison_target(MsgGeneratorGrammar
     ${CMAKE_CURRENT_BINARY_DIR}/ordered-parser-grammar.y
     ${CMAKE_CURRENT_BINARY_DIR}/ordered-parser-grammar.c
     COMPILE_FLAGS ${BISON_FLAGS})
+
+add_test_subdirectory(tests)

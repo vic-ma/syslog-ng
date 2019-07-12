@@ -89,7 +89,7 @@ Test(ordered_parser, letters)
 {
   LogMessage *msg;
 
-  ordered_parser_process_flag(ordered_parser, OPF_LETTERS);
+  ordered_parser_process_flag(ordered_parser, "letters");
   msg = parse_ordered_list_into_log_message("A) Apple B) Banana C) Cherry");
   assert_log_message_value_by_name(msg, "A", "Apple");
   assert_log_message_value_by_name(msg, "B", "Banana");
@@ -101,7 +101,7 @@ Test(ordered_parser, numbers)
 {
   LogMessage *msg;
 
-  ordered_parser_process_flag(ordered_parser, OPF_NUMBERS);
+  ordered_parser_process_flag(ordered_parser, "numbers");
   msg = parse_ordered_list_into_log_message("1) Apple 2) Banana 3) Cherry");
   assert_log_message_value_by_name(msg, "1", "Apple");
   assert_log_message_value_by_name(msg, "2", "Banana");
@@ -113,7 +113,7 @@ Test(ordered_parser, colon_suffix)
 {
   LogMessage *msg;
 
-  ordered_parser_set_suffix(':');
+  ordered_parser_set_suffix(ordered_parser, ':');
   msg = parse_ordered_list_into_log_message("A: Apple B: Banana C: Cherry");
   assert_log_message_value_by_name(msg, "A", "Apple");
   assert_log_message_value_by_name(msg, "B", "Banana");
@@ -125,8 +125,8 @@ Test(ordered_parser, mixed)
 {
   LogMessage *msg;
 
-  ordered_parser_process_flag(ordered_parser, OPF_NUMBERS);
-  ordered_parser_set_suffix(":");
+  ordered_parser_process_flag(ordered_parser, "letters");
+  ordered_parser_set_suffix(ordered_parser, ':');
   msg = parse_ordered_list_into_log_message("1: Apple 2: Banana 3: Cherry");
   assert_log_message_value_by_name(msg, "1", "Apple");
   assert_log_message_value_by_name(msg, "2", "Banana");
@@ -138,8 +138,8 @@ Test(ordered_parser, varying_spaces)
 {
   LogMessage *msg;
 
-  ordered_parser_process_flag(ordered_parser, OPF_LETTERS);
-  ordered_parser_set_suffix("=");
+  ordered_parser_process_flag(ordered_parser, "letters");
+  ordered_parser_set_suffix(ordered_parser, '=');
   msg = parse_ordered_list_into_log_message("A=    Apple    B    =Banana C    =    Cherry");
   assert_log_message_value_by_name(msg, "A", "Apple");
   assert_log_message_value_by_name(msg, "B", "Banana");

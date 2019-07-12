@@ -24,3 +24,5 @@ modules_examples_parsers_libordered_parser_la_CPPFLAGS  = \
 modules_examples_parsers_libordered_parser_la_LIBADD  = $(MODULE_DEPS_LIBS)
 modules_examples_parsers_libordered_parser_la_LDFLAGS = $(MODULE_LDFLAGS)
 modules_examples_parsers_libordered_parser_la_DEPENDENCIES = $(MODULE_DEPS_LIBS)
+
+include modules/examples/parsers/ordered-parser/tests/Makefile.am
