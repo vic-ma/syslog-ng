@@ -32,10 +32,13 @@ static gboolean
 filter_length_eval(FilterExprNode *s, LogMessage **msgs, gint num_msg)
 {
   FilterLength *self = (FilterLength *) s;
+  gboolean result;
+
   LogMessage *msg = msgs[num_msg - 1];
   const gchar *msg_part = log_msg_get_value(msg, LM_V_MESSAGE, NULL);
 
-  return strlen(msg_part) <= self->length;
+  result =  strlen(msg_part) <= self->length;
+  return result ^ s->comp;
 }
 
 FilterExprNode *
