@@ -571,6 +571,21 @@ _get_base64_encoded_size(gsize len)
 static void
 tf_base64encode(LogMessage *msg, gint argc, GString *argv[], GString *result)
 {
+  const gchar *pri = log_msg_get_value_by_name(msg, "PRI", NULL);
+  g_string_append_c(result, '<');
+  g_string_append(result, pri);
+  g_string_append_c(result, '>');
+  g_string_append_c(result, ' ');
+
+  const gchar *date = log_msg_get_value_by_name(msg, "DATE", NULL);
+  g_string_append(result, date);
+
+  //const gchar *msg_tag = log_msg_get_value(msg, LM_V_LEGACY_MSGHDR, NULL);
+  //const gchar *msg_content = log_msg_get_value(msg, LM_V_MESSAGE, NULL);
+  //g_string_append(result, msg_tag);
+  //g_string_append(result, msg_content);
+
+  return;
   gint i;
   gint state = 0;
   gint save = 0;
@@ -615,3 +630,8 @@ tf_base64encode(LogMessage *msg, gint argc, GString *argv[], GString *result)
 };
 
 TEMPLATE_FUNCTION_SIMPLE(tf_base64encode);
+
+static void
+tf_ietf_to_bsd(LogMessage *msg, gint argc, GString *argv[], GString *result)
+{
+}
