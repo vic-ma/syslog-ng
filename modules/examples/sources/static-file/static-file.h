@@ -30,7 +30,7 @@
 typedef struct _StaticFileSourceDriver
 {
     LogThreadedFetcherDriver super;
-    StaticFileReader reader;
+    StaticFileReader *reader;
     gchar *filename;
 } StaticFileSourceDriver;
 

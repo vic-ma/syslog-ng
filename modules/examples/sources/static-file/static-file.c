@@ -20,16 +20,50 @@
  *
  */
 
-
 #include "static-file.h"
-#include "logmsg/logmsg.h"
 #include "static-file-reader.h"
+#include "logmsg/logmsg.h"
+#include "messages.h"
+
+#define STF_MAXLEN 1000
+
+static gboolean
+_init(LogPipe *s)
+{
+  StaticFileReader *self = (StaticFileReader *) s;
+
+  if (!self->pathname)
+    {
+      msg_error("Missing pathname for static-file source", log_pipe_location_tag(s));
+      return FALSE;
+    }
+  return log_threaded_fetcher_driver_init_method(s);
+}
 
 static gboolean
 _open_file(LogThreadedFetcherDriver *s)
 {
   StaticFileReader *self = (StaticFileReader *) s;
   return stf_open(self->reader, self->pathname);
+}
+
+static LogThreadedFetchResult
+_fetch_line(LogThreadedFetcherDriver *self)
+{
+  StaticFileReader *self = (StaticFileReader *) s;
+
+  GString *line = stf_nextline(self->reader, STF_MAXLEN);
+
+  if (!line)
+    {
+      LogThreadedFetchResult result = { THREADED_FETCH_ERROR, NULL };
+      return result;
+    }
+
+  LogMessage *msg = log_msg_new_empty();
+  log_msg_set_value(msg, LM_V_MESSAGE, line->str, -1);
+  LogThreadedFetchResult result = { THREADED_FETCH_SUCCESS, msg };
+  return result;
 }
 
 static void
@@ -39,10 +73,15 @@ _close_file(LogThreadedFetcherDriver *s)
   stf_close(self->reader);
 }
 
-static LogThreadedFetchResult
-_fetch_line(LogThreadedFetcherDriver *self)
+static void
+_free(LogPipe *s)
 {
   StaticFileReader *self = (StaticFileReader *) s;
+
+  g_free(self->pathname);
+  stf_free(self->reader);
+
+  log_threaded_fetcher_driver_free_method(s);
 }
 
 LogDriver *
@@ -54,4 +93,10 @@ static_file_sd_new(GlobalConfig *cfg)
   self->super.connect = _open_file;
   self->super.disconnect = _close_file;
   self->super.fetch = _fetch_line;
+
+  self->super.super.super.super.super.init = _init;
+  self->super.super.super.super.super.free_fn = _free;
+  self->super.super.format_stats_instance = _format_stats_instance;
+
+  return &self->super.super.super.super;
 }

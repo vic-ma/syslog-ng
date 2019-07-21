@@ -28,11 +28,6 @@ gboolean stf_open(StaticFileReader *self, gchar *pathname)
   return self->file != NULL;
 }
 
-void stf_close(StaticFileReader *self)
-{
-  fclose(self->file);
-}
-
 GString stf_nextline(StaticFileReader *self, gsize maxlen)
 {
   GString *line = g_string_sized_new(maxlen);
@@ -42,4 +37,14 @@ GString stf_nextline(StaticFileReader *self, gsize maxlen)
       return NULL;
     }
   return line;
+}
+
+void stf_close(StaticFileReader *self)
+{
+  fclose(self->file);
+}
+
+void stf_free(StaticFileReader *self)
+{
+  g_free(self);
 }
