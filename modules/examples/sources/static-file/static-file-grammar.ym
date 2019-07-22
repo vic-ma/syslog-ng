@@ -31,8 +31,11 @@
 #include "logthrsource/logthrsourcedrv.h"
 #include "cfg-parser.h"
 #include "static-file-grammar.h"
+#include "syslog-names.h"
+#include "messages.h"
 #include "plugin.h"
 #include "cfg-grammar.h"
+#include "template/templates.h"
 
 #include <string.h>
 
@@ -50,6 +53,7 @@
 %token KW_STATIC_FILE
 
 %type <ptr> source_static_file
+%type <ptr> source_static_file_params
 
 %%
 
@@ -58,7 +62,7 @@ start
   ;
 
 source_static_file
-  : KW_STATIC_FILE '(' source_static_file_params ')'  { $$ = $3; }
+  : KW_STATIC_FILE '(' source_static_file_params ')' { $$ = $3; }
   ;
 
 source_static_file_params
@@ -68,7 +72,8 @@ source_static_file_params
     }
   source_static_file_options
     {
-      $$ = last_driver; free($1);
+      $$ = last_driver;
+      free($1);
     }
   ;
 

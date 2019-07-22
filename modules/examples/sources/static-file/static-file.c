@@ -21,7 +21,6 @@
  */
 
 #include "static-file.h"
-#include "static-file-reader.h"
 #include "logmsg/logmsg.h"
 #include "messages.h"
 
@@ -30,27 +29,42 @@
 static gboolean
 _init(LogPipe *s)
 {
-  StaticFileReader *self = (StaticFileReader *) s;
+  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
 
   if (!self->pathname)
     {
       msg_error("Missing pathname for static-file source", log_pipe_location_tag(s));
       return FALSE;
     }
+
   return log_threaded_fetcher_driver_init_method(s);
+}
+
+static const gchar *
+_format_stats_instance(LogThreadedSourceDriver *s)
+{
+  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
+  static gchar persist_name[1024];
+
+  if (s->super.super.super.persist_name)
+    g_snprintf(persist_name, sizeof(persist_name), "static-file,%s", s->super.super.super.persist_name);
+  else
+    g_snprintf(persist_name, sizeof(persist_name), "static-file,%s", self->pathname->str);
+
+  return persist_name;
 }
 
 static gboolean
 _open_file(LogThreadedFetcherDriver *s)
 {
-  StaticFileReader *self = (StaticFileReader *) s;
-  return stf_open(self->reader, self->pathname);
+  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
+  return stf_open(self->reader, self->pathname->str);
 }
 
 static LogThreadedFetchResult
-_fetch_line(LogThreadedFetcherDriver *self)
+_fetch_line(LogThreadedFetcherDriver *s)
 {
-  StaticFileReader *self = (StaticFileReader *) s;
+  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
 
   GString *line = stf_nextline(self->reader, STF_MAXLEN);
 
@@ -69,14 +83,14 @@ _fetch_line(LogThreadedFetcherDriver *self)
 static void
 _close_file(LogThreadedFetcherDriver *s)
 {
-  StaticFileReader *self = (StaticFileReader *) s;
+  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
   stf_close(self->reader);
 }
 
 static void
 _free(LogPipe *s)
 {
-  StaticFileReader *self = (StaticFileReader *) s;
+  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
 
   g_free(self->pathname);
   stf_free(self->reader);
@@ -85,10 +99,10 @@ _free(LogPipe *s)
 }
 
 LogDriver *
-static_file_sd_new(GlobalConfig *cfg)
+static_file_sd_new(gchar *pathname, GlobalConfig *cfg)
 {
-  StaticFileDriver *self = g_new0(StaticFileDriver, 1);
-  log_threaded_fetcher_Driver_init_instance(&self->super, cfg);
+  StaticFileSourceDriver *self = g_new0(StaticFileSourceDriver, 1);
+  log_threaded_fetcher_driver_init_instance(&self->super, cfg);
 
   self->super.connect = _open_file;
   self->super.disconnect = _close_file;
@@ -97,6 +111,9 @@ static_file_sd_new(GlobalConfig *cfg)
   self->super.super.super.super.super.init = _init;
   self->super.super.super.super.super.free_fn = _free;
   self->super.super.format_stats_instance = _format_stats_instance;
+
+  self->reader = stf_new();
+  self->pathname = g_string_new(pathname);
 
   return &self->super.super.super.super;
 }

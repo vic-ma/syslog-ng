@@ -22,13 +22,21 @@
 
 #include "static-file-reader.h"
 
-gboolean stf_open(StaticFileReader *self, gchar *pathname)
+StaticFileReader *
+stf_new(void)
+{
+  return g_new0(StaticFileReader, 1);
+}
+
+gboolean
+stf_open(StaticFileReader *self, gchar *pathname)
 {
   self->file = fopen(pathname, "r");
   return self->file != NULL;
 }
 
-GString stf_nextline(StaticFileReader *self, gsize maxlen)
+GString *
+stf_nextline(StaticFileReader *self, gsize maxlen)
 {
   GString *line = g_string_sized_new(maxlen);
   if (!fgets(line->str, maxlen, self->file))
@@ -39,12 +47,14 @@ GString stf_nextline(StaticFileReader *self, gsize maxlen)
   return line;
 }
 
-void stf_close(StaticFileReader *self)
+void
+stf_close(StaticFileReader *self)
 {
   fclose(self->file);
 }
 
-void stf_free(StaticFileReader *self)
+void
+stf_free(StaticFileReader *self)
 {
   g_free(self);
 }

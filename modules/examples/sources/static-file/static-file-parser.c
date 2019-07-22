@@ -39,7 +39,7 @@ CfgParser static_file_parser =
 #if ENABLE_DEBUG
   .debug_flag = &static_file_debug,
 #endif
-  .name = "static_file_parser",
+  .name = "static_file",
   .keywords = static_file_keywords,
   .parse = (gint (*)(CfgLexer *, gpointer *, gpointer)) static_file_parse,
   .cleanup = (void (*)(gpointer)) log_pipe_unref,

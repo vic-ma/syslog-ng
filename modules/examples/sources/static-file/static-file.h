@@ -26,14 +26,17 @@
 #include "syslog-ng.h"
 #include "driver.h"
 #include "logthrsource/logthrfetcherdrv.h"
+#include "static-file-reader.h"
 
 typedef struct _StaticFileSourceDriver
 {
     LogThreadedFetcherDriver super;
     StaticFileReader *reader;
-    gchar *filename;
+    //gchar *pathname;
+    GString *pathname;
 } StaticFileSourceDriver;
 
-LogDriver *static_file_sd_new(GlobalConfig *cfg);
+StaticFileReader *stf_new(void);
+LogDriver *static_file_sd_new(gchar *pathname, GlobalConfig *cfg);
 
 #endif

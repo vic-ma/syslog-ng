@@ -25,9 +25,16 @@
 
 #include <stdio.h>
 
-typedef _StaticFileReader
+#include "syslog-ng.h"
+
+typedef struct _StaticFileReader
 {
     FILE *file;
 } StaticFileReader;
+
+gboolean stf_open(StaticFileReader *self, gchar *pathname);
+GString *stf_nextline(StaticFileReader *self, gsize maxlen);
+void stf_close(StaticFileReader *self);
+void stf_free(StaticFileReader *self);
 
 #endif
