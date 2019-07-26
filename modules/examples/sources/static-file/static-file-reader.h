@@ -32,9 +32,10 @@ typedef struct _StaticFileReader
     FILE *file;
 } StaticFileReader;
 
-gboolean stf_open(StaticFileReader *self, gchar *pathname);
-GString *stf_nextline(StaticFileReader *self, gsize maxlen);
-void stf_close(StaticFileReader *self);
-void stf_free(StaticFileReader *self);
+StaticFileReader *sfr_new(void);
+gboolean sfr_open(StaticFileReader *self, gchar *pathname);
+GString *sfr_nextline(StaticFileReader *self, gsize maxlen);
+void sfr_close(StaticFileReader *self);
+void sfr_free(StaticFileReader *self);
 
 #endif

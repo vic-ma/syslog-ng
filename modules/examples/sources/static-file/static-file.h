@@ -28,15 +28,15 @@
 #include "logthrsource/logthrfetcherdrv.h"
 #include "static-file-reader.h"
 
+#define SF_MAXLEN 1000
+
 typedef struct _StaticFileSourceDriver
 {
     LogThreadedFetcherDriver super;
     StaticFileReader *reader;
-    //gchar *pathname;
-    GString *pathname;
+    gchar *pathname;
 } StaticFileSourceDriver;
 
-StaticFileReader *stf_new(void);
 LogDriver *static_file_sd_new(gchar *pathname, GlobalConfig *cfg);
 
 #endif

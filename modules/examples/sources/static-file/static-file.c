@@ -24,18 +24,10 @@
 #include "logmsg/logmsg.h"
 #include "messages.h"
 
-#define STF_MAXLEN 1000
-
 static gboolean
 _init(LogPipe *s)
 {
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
-
-  if (!self->pathname)
-    {
-      msg_error("Missing pathname for static-file source", log_pipe_location_tag(s));
-      return FALSE;
-    }
 
   return log_threaded_fetcher_driver_init_method(s);
 }
@@ -49,7 +41,7 @@ _format_stats_instance(LogThreadedSourceDriver *s)
   if (s->super.super.super.persist_name)
     g_snprintf(persist_name, sizeof(persist_name), "static-file,%s", s->super.super.super.persist_name);
   else
-    g_snprintf(persist_name, sizeof(persist_name), "static-file,%s", self->pathname->str);
+    g_snprintf(persist_name, sizeof(persist_name), "static-file,%s", self->pathname);
 
   return persist_name;
 }
@@ -58,7 +50,7 @@ static gboolean
 _open_file(LogThreadedFetcherDriver *s)
 {
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
-  return stf_open(self->reader, self->pathname->str);
+  return sfr_open(self->reader, self->pathname);
 }
 
 static LogThreadedFetchResult
@@ -66,13 +58,14 @@ _fetch_line(LogThreadedFetcherDriver *s)
 {
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
 
-  GString *line = stf_nextline(self->reader, STF_MAXLEN);
+  GString *line = sfr_nextline(self->reader, SF_MAXLEN);
 
   if (!line)
     {
-      LogThreadedFetchResult result = { THREADED_FETCH_ERROR, NULL };
+      LogThreadedFetchResult result = { THREADED_FETCH_NOT_CONNECTED, NULL };
       return result;
     }
+  g_string_truncate(line, line->len-1);
 
   LogMessage *msg = log_msg_new_empty();
   log_msg_set_value(msg, LM_V_MESSAGE, line->str, -1);
@@ -84,7 +77,7 @@ static void
 _close_file(LogThreadedFetcherDriver *s)
 {
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
-  stf_close(self->reader);
+  sfr_close(self->reader);
 }
 
 static void
@@ -93,7 +86,7 @@ _free(LogPipe *s)
   StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
 
   g_free(self->pathname);
-  stf_free(self->reader);
+  sfr_free(self->reader);
 
   log_threaded_fetcher_driver_free_method(s);
 }
@@ -112,8 +105,8 @@ static_file_sd_new(gchar *pathname, GlobalConfig *cfg)
   self->super.super.super.super.super.free_fn = _free;
   self->super.super.format_stats_instance = _format_stats_instance;
 
-  self->reader = stf_new();
-  self->pathname = g_string_new(pathname);
+  self->reader = sfr_new();
+  self->pathname = strdup(pathname);
 
   return &self->super.super.super.super;
 }

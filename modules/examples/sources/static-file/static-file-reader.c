@@ -23,38 +23,41 @@
 #include "static-file-reader.h"
 
 StaticFileReader *
-stf_new(void)
+sfr_new(void)
 {
   return g_new0(StaticFileReader, 1);
 }
 
 gboolean
-stf_open(StaticFileReader *self, gchar *pathname)
+sfr_open(StaticFileReader *self, gchar *pathname)
 {
   self->file = fopen(pathname, "r");
   return self->file != NULL;
 }
 
 GString *
-stf_nextline(StaticFileReader *self, gsize maxlen)
+sfr_nextline(StaticFileReader *self, gsize maxlen)
 {
-  GString *line = g_string_sized_new(maxlen);
-  if (!fgets(line->str, maxlen, self->file))
+  gchar *temp_buf = g_malloc(maxlen);
+  if (!fgets(temp_buf, maxlen, self->file))
     {
-      g_string_free(line, TRUE);
+      g_free(temp_buf);
       return NULL;
     }
+
+  GString *line = g_string_new(temp_buf);
+  g_free(temp_buf);
   return line;
 }
 
 void
-stf_close(StaticFileReader *self)
+sfr_close(StaticFileReader *self)
 {
   fclose(self->file);
 }
 
 void
-stf_free(StaticFileReader *self)
+sfr_free(StaticFileReader *self)
 {
   g_free(self);
 }
