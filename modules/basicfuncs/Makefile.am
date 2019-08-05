@@ -23,6 +23,7 @@ EXTRA_DIST					+=	\
 	modules/basicfuncs/ip-funcs.c			\
 	modules/basicfuncs/misc-funcs.c			\
 	modules/basicfuncs/list-funcs.c			\
+	modules/basicfuncs/base-funcs.c			\
 	modules/basicfuncs/tf-template.c		\
 	modules/basicfuncs/CMakeLists.txt
 
