@@ -23,27 +23,23 @@
 #include <limits.h>
 #include <math.h>
 
-static GString *
+static gchar *
 _convert(const char *format, long int num)
 {
   gsize max_digits = floor(log10(LONG_MAX));
-  gchar *converted_str = g_malloc(max_digits+1);
+  gchar *converted = g_malloc(max_digits+1);
 
-  snprintf(converted_str, max_digits, format, num);
-
-  GString *converted_gstring = g_string_new(converted_str);
-  g_free(converted_str);
-
-  return converted_gstring;
+  snprintf(converted, max_digits, format, num);
+  return converted;
 }
 
 static void
 tf_base_dec(LogMessage *msg, gint argc, GString *argv[], GString *result)
 {
   long int original = strtol(argv[0]->str, NULL, 0);
-  GString *converted = _convert("%d", original);
-  g_string_append(result, converted->str);
-  g_string_free(converted, TRUE);
+  gchar *converted = _convert("%d", original);
+  g_string_append(result, converted);
+  g_free(converted);
 }
 
 TEMPLATE_FUNCTION_SIMPLE(tf_base_dec);
@@ -52,9 +48,9 @@ static void
 tf_base_hex(LogMessage *msg, gint argc, GString *argv[], GString *result)
 {
   long int original = strtol(argv[0]->str, NULL, 0);
-  GString *converted = _convert("%x", original);
-  g_string_append(result, converted->str);
-  g_string_free(converted, TRUE);
+  gchar *converted = _convert("%x", original);
+  g_string_append(result, converted);
+  g_free(converted);
 }
 
 TEMPLATE_FUNCTION_SIMPLE(tf_base_hex);
@@ -63,9 +59,9 @@ static void
 tf_base_oct(LogMessage *msg, gint argc, GString *argv[], GString *result)
 {
   long int original = strtol(argv[0]->str, NULL, 0);
-  GString *converted = _convert("%o", original);
-  g_string_append(result, converted->str);
-  g_string_free(converted, TRUE);
+  gchar *converted = _convert("%o", original);
+  g_string_append(result, converted);
+  g_free(converted);
 }
 
 TEMPLATE_FUNCTION_SIMPLE(tf_base_oct);
