@@ -52,50 +52,21 @@ _convert(const char *format, long int num)
   return converted;
 }
 
-static void
-tf_base_dec(LogMessage *msg, gint argc, GString *argv[], GString *result)
-{
-  const gchar *tf_name = "$(dec)";
+#define IMPLEMENT_BASE_TF(base_name, base_format)                                           \
+    static void                                                                             \
+    tf_base_ ## base_name(LogMessage *msg, gint argc, GString *argv[], GString *result)     \
+    {                                                                                       \
+      const gchar *tf_name = "($" #base_name ")";                                           \
+      if (!_check_argc(argc, tf_name))                                                      \
+        return;                                                                             \
+      long int original = strtol(argv[0]->str, NULL, 0);                                    \
+      gchar *converted = _convert(#base_format, original);                                  \
+      g_string_append(result, converted);                                                   \
+      g_free(converted);                                                                    \
+    }                                                                                       \
+                                                                                            \
+    TEMPLATE_FUNCTION_SIMPLE(tf_base_ ## base_name);
 
-  if (!_check_argc(argc, tf_name))
-    return;
-
-  long int original = strtol(argv[0]->str, NULL, 0);
-  gchar *converted = _convert("%d", original);
-  g_string_append(result, converted);
-  g_free(converted);
-}
-
-TEMPLATE_FUNCTION_SIMPLE(tf_base_dec);
-
-static void
-tf_base_hex(LogMessage *msg, gint argc, GString *argv[], GString *result)
-{
-  const gchar *tf_name = "$(hex)";
-
-  if (!_check_argc(argc, tf_name))
-    return;
-
-  long int original = strtol(argv[0]->str, NULL, 0);
-  gchar *converted = _convert("%x", original);
-  g_string_append(result, converted);
-  g_free(converted);
-}
-
-TEMPLATE_FUNCTION_SIMPLE(tf_base_hex);
-
-static void
-tf_base_oct(LogMessage *msg, gint argc, GString *argv[], GString *result)
-{
-  const gchar *tf_name = "$(oct)";
-
-  if (!_check_argc(argc, tf_name))
-    return;
-
-  long int original = strtol(argv[0]->str, NULL, 0);
-  gchar *converted = _convert("%o", original);
-  g_string_append(result, converted);
-  g_free(converted);
-}
-
-TEMPLATE_FUNCTION_SIMPLE(tf_base_oct);
+IMPLEMENT_BASE_TF(dec, %d);
+IMPLEMENT_BASE_TF(hex, %x);
+IMPLEMENT_BASE_TF(oct, %o);
