@@ -23,6 +23,25 @@
 #include <limits.h>
 #include <math.h>
 
+static gboolean
+_check_argc(gint argc, const gchar *tf_name)
+{
+  GString *error_msg = g_string_new(tf_name);
+
+  if (argc == 0)
+    {
+      return FALSE;
+    }
+  else if (argc > 1)
+    {
+      g_string_append(error_msg, " parsing failed: too many arguments");
+      msg_error(error_msg->str);
+      g_string_free(error_msg, TRUE);
+      return FALSE;
+    }
+  return TRUE;
+}
+
 static gchar *
 _convert(const char *format, long int num)
 {
@@ -36,6 +55,11 @@ _convert(const char *format, long int num)
 static void
 tf_base_dec(LogMessage *msg, gint argc, GString *argv[], GString *result)
 {
+  const gchar *tf_name = "$(dec)";
+
+  if (!_check_argc(argc, tf_name))
+    return;
+
   long int original = strtol(argv[0]->str, NULL, 0);
   gchar *converted = _convert("%d", original);
   g_string_append(result, converted);
@@ -47,6 +71,11 @@ TEMPLATE_FUNCTION_SIMPLE(tf_base_dec);
 static void
 tf_base_hex(LogMessage *msg, gint argc, GString *argv[], GString *result)
 {
+  const gchar *tf_name = "$(hex)";
+
+  if (!_check_argc(argc, tf_name))
+    return;
+
   long int original = strtol(argv[0]->str, NULL, 0);
   gchar *converted = _convert("%x", original);
   g_string_append(result, converted);
@@ -58,6 +87,11 @@ TEMPLATE_FUNCTION_SIMPLE(tf_base_hex);
 static void
 tf_base_oct(LogMessage *msg, gint argc, GString *argv[], GString *result)
 {
+  const gchar *tf_name = "$(oct)";
+
+  if (!_check_argc(argc, tf_name))
+    return;
+
   long int original = strtol(argv[0]->str, NULL, 0);
   gchar *converted = _convert("%o", original);
   g_string_append(result, converted);
