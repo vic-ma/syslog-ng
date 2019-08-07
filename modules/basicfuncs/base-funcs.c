@@ -20,8 +20,9 @@
  *
  */
 
-#include <limits.h>
 #include <math.h>
+
+#define MAX_DIGITS 100
 
 static gboolean
 _check_argc(gint argc, const gchar *tf_name)
@@ -45,10 +46,8 @@ _check_argc(gint argc, const gchar *tf_name)
 static gchar *
 _convert(const char *format, long int num)
 {
-  gsize max_digits = floor(log10(LONG_MAX));
-  gchar *converted = g_malloc(max_digits+1);
-
-  snprintf(converted, max_digits, format, num);
+  gchar *converted = g_malloc(MAX_DIGITS+1);
+  snprintf(converted, MAX_DIGITS, format, num);
   return converted;
 }
 
