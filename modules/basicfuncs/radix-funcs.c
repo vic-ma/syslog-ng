@@ -51,21 +51,21 @@ _convert(const char *format, long int num)
   return converted;
 }
 
-#define IMPLEMENT_BASE_TF(base_name, base_format)                                           \
+#define IMPLEMENT_RADIX_TF(radix_name, print_format)                                           \
     static void                                                                             \
-    tf_base_ ## base_name(LogMessage *msg, gint argc, GString *argv[], GString *result)     \
+    tf_radix_ ## radix_name(LogMessage *msg, gint argc, GString *argv[], GString *result)     \
     {                                                                                       \
-      const gchar *tf_name = "($" #base_name ")";                                           \
+      const gchar *tf_name = "($" #radix_name ")";                                           \
       if (!_check_argc(argc, tf_name))                                                      \
         return;                                                                             \
       long int original = strtol(argv[0]->str, NULL, 0);                                    \
-      gchar *converted = _convert(#base_format, original);                                  \
+      gchar *converted = _convert(#print_format, original);                                  \
       g_string_append(result, converted);                                                   \
       g_free(converted);                                                                    \
     }                                                                                       \
                                                                                             \
-    TEMPLATE_FUNCTION_SIMPLE(tf_base_ ## base_name);
+    TEMPLATE_FUNCTION_SIMPLE(tf_radix_ ## radix_name);
 
-IMPLEMENT_BASE_TF(dec, %d);
-IMPLEMENT_BASE_TF(hex, %x);
-IMPLEMENT_BASE_TF(oct, %o);
+IMPLEMENT_RADIX_TF(dec, %d);
+IMPLEMENT_RADIX_TF(hex, %x);
+IMPLEMENT_RADIX_TF(oct, %o);
