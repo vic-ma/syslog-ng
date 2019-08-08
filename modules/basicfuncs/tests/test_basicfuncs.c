@@ -451,3 +451,18 @@ Test(basicfuncs, test_tfurldecode)
   assert_template_format("$(url-decode %)", "");
   assert_template_format("$(url-decode %00a)", "");
 }
+
+Test(basicfuncs, test_base_funcs)
+{
+  assert_template_format("$(dec 10)", "10");
+  assert_template_format("$(dec 0x10)", "16");
+  assert_template_format("$(dec 010)", "8");
+
+  assert_template_format("$(hex 10)", "a");
+  assert_template_format("$(hex 0x10)", "10");
+  assert_template_format("$(hex 010)", "8");
+
+  assert_template_format("$(oct 10)", "12");
+  assert_template_format("$(oct 0x10)", "20");
+  assert_template_format("$(oct 010)", "10");
+}
