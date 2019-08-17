@@ -1,0 +1,1 @@
+add_unit_test(CRITERION TARGET test_radix_funcs DEPENDS examples)

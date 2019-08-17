@@ -56,7 +56,6 @@ _append_args_with_separator(gint argc, GString *argv[], GString *result, gchar s
  * units. (Bazsi) */
 #include "urlencode.c"
 #include "numeric-funcs.c"
-#include "radix-funcs.c"
 #include "str-funcs.c"
 #include "cond-funcs.c"
 #include "ip-funcs.c"
@@ -115,11 +114,6 @@ static Plugin basicfuncs_plugins[] =
   TEMPLATE_FUNCTION_PLUGIN(tf_num_min, "min"),
   TEMPLATE_FUNCTION_PLUGIN(tf_num_max, "max"),
   TEMPLATE_FUNCTION_PLUGIN(tf_num_average, "average"),
-
-  /* radix-funcs */
-  TEMPLATE_FUNCTION_PLUGIN(tf_radix_dec, "dec"),
-  TEMPLATE_FUNCTION_PLUGIN(tf_radix_hex, "hex"),
-  TEMPLATE_FUNCTION_PLUGIN(tf_radix_oct, "oct"),
 
   /* ip-funcs */
   TEMPLATE_FUNCTION_PLUGIN(tf_ipv4_to_int, "ipv4-to-int"),

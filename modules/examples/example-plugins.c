@@ -24,6 +24,8 @@
 #include "cfg-parser.h"
 #include "plugin.h"
 #include "plugin-types.h"
+#include "template/function.h"
+#include "templates/radix-funcs/radix-funcs.h"
 
 extern CfgParser msg_generator_parser;
 
@@ -52,6 +54,9 @@ static Plugin example_plugins[] =
     .name = "example_diskq_source",
     .parser = &threaded_diskq_source_parser,
   },
+  TEMPLATE_FUNCTION_PLUGIN(tf_radix_dec, "dec"),
+  TEMPLATE_FUNCTION_PLUGIN(tf_radix_hex, "hex"),
+  TEMPLATE_FUNCTION_PLUGIN(tf_radix_oct, "oct"),
 };
 
 gboolean

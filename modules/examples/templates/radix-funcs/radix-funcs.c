@@ -22,19 +22,18 @@
 
 #include <math.h>
 
-#define MAX_DIGITS 100
+#include "radix-funcs.h"
 
 static gboolean
 _check_argc(gint argc, const gchar *tf_name)
 {
-  GString *error_msg = g_string_new(tf_name);
-
   if (argc == 0)
     {
       return FALSE;
     }
   else if (argc > 1)
     {
+      GString *error_msg = g_string_new(tf_name);
       g_string_append(error_msg, " parsing failed: too many arguments");
       msg_error(error_msg->str);
       g_string_free(error_msg, TRUE);
@@ -46,9 +45,7 @@ _check_argc(gint argc, const gchar *tf_name)
 static gchar *
 _convert(const char *format, long int num)
 {
-  gchar *converted = g_malloc(MAX_DIGITS+1);
-  snprintf(converted, MAX_DIGITS, format, num);
-  return converted;
+  return g_strdup_printf(format, num);
 }
 
 #define IMPLEMENT_RADIX_TF(radix_name, print_format)                                        \
