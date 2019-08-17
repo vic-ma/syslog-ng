@@ -13,7 +13,7 @@ BUILT_SOURCES += \
   modules/examples/parsers/ordered-parser/ordered-parser-grammar.h
 
 EXTRA_DIST += \
-  modules/examples/parsers/ordered-parser/ordered-paresr-grammar.ym \
+  modules/examples/parsers/ordered-parser/ordered-parser-grammar.ym \
   modules/examples/parsers/ordered-parser/CMakeLists.txt
 
 modules_examples_parsers_libordered_parser_la_CPPFLAGS  = \
