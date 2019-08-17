@@ -57,7 +57,6 @@ static CfgLexerKeyword filter_expr_keywords[] =
   { "netmask",            KW_NETMASK  },
   { "tags",               KW_TAGS     },
   { "in_list",            KW_IN_LIST  },
-  { "length",             KW_LENGTH   },
 #if SYSLOG_NG_ENABLE_IPV6
   { "netmask6",     KW_NETMASK6 },
 #endif

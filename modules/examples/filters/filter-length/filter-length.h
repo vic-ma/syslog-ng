@@ -20,33 +20,11 @@
  *
  */
 
-#include "filter-length.h"
+#ifndef FILTER_LENGTH_H_INCLUDED
+#define FILTER_LENGTH_H_INCLUDED
 
-typedef struct _FilterLength
-{
-  FilterExprNode super;
-  int length;
-} FilterLength;
+#include "filter/filter-expr.h"
 
-static gboolean
-filter_length_eval(FilterExprNode *s, LogMessage **msgs, gint num_msg)
-{
-  FilterLength *self = (FilterLength *) s;
-  gboolean result;
+FilterExprNode *filter_len_lt_new(int length);
 
-  LogMessage *msg = msgs[num_msg - 1];
-  const gchar *message_part = log_msg_get_value(msg, LM_V_MESSAGE, NULL);
-
-  result =  strlen(message_part) <= self->length;
-  return result ^ s->comp;
-}
-
-FilterExprNode *
-filter_length_new(int length)
-{
-  FilterLength *self = g_new0(FilterLength, 1);
-  filter_expr_node_init_instance(&self->super);
-  self->super.eval = filter_length_eval;
-  self->length = length;
-  return &self->super;
-}
+#endif
