@@ -23,14 +23,7 @@
 #include "static-file.h"
 #include "logmsg/logmsg.h"
 #include "messages.h"
-
-static gboolean
-_init(LogPipe *s)
-{
-  StaticFileSourceDriver *self = (StaticFileSourceDriver *) s;
-
-  return log_threaded_fetcher_driver_init_method(s);
-}
+#include "lib/apphook.h"
 
 static const gchar *
 _format_stats_instance(LogThreadedSourceDriver *s)
@@ -97,13 +90,12 @@ static_file_sd_new(gchar *pathname, GlobalConfig *cfg)
   StaticFileSourceDriver *self = g_new0(StaticFileSourceDriver, 1);
   log_threaded_fetcher_driver_init_instance(&self->super, cfg);
 
+  self->super.super.super.super.super.free_fn = _free;
+  self->super.super.format_stats_instance = _format_stats_instance;
+
   self->super.connect = _open_file;
   self->super.disconnect = _close_file;
   self->super.fetch = _fetch_line;
-
-  self->super.super.super.super.super.init = _init;
-  self->super.super.super.super.super.free_fn = _free;
-  self->super.super.format_stats_instance = _format_stats_instance;
 
   self->reader = sfr_new();
   self->pathname = strdup(pathname);
