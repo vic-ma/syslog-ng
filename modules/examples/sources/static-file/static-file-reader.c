@@ -53,7 +53,8 @@ sfr_nextline(StaticFileReader *self, gsize maxlen)
 void
 sfr_close(StaticFileReader *self)
 {
-  fclose(self->file);
+  if (self->file)
+    fclose(self->file);
 }
 
 void
