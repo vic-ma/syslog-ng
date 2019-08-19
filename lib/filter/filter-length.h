@@ -20,52 +20,21 @@
  *
  */
 
-%code requires {
+#ifndef FILTER_LENGTH_H_INCLUDED
+#define FILTER_LENGTH_H_INCLUDED
 
-#include "filter/filter-expr-parser.h"
+#include "filter/filter-expr.h"
 
-}
+FilterExprNode *filter_len_lt_new(int length);
+FilterExprNode *filter_len_le_new(int length);
+FilterExprNode *filter_len_gt_new(int length);
+FilterExprNode *filter_len_ge_new(int length);
+FilterExprNode *filter_len_eq_new(int length);
+FilterExprNode *filter_len_ne_new(int length);
 
-%code {
+FilterExprNode *filter_len_gtlt_new(int min, int max);
+FilterExprNode *filter_len_gtle_new(int min, int max);
+FilterExprNode *filter_len_gelt_new(int min, int max);
+FilterExprNode *filter_len_gele_new(int min, int max);
 
-#include "filter-length-grammar.h"
-#include "filter-length.h"
-#include "messages.h"
-#include "template/templates.h"
-#include "syslog-names.h"
-#include "plugin.h"
-#include "cfg-grammar.h"
-
-FilterExprNode *last_filter_expr;
-
-}
-
-%name-prefix "filter_length_"
-%lex-param {CfgLexer *lexer}
-%parse-param {CfgLexer *lexer}
-%parse-param {FilterExprNode **result}
-%parse-param {gpointer arg}
-
-/* INCLUDE_DECLS */
-
-%token KW_FILTER_LENGTH
-%token KW_LEN_LT
-
-%type <node> filter_length_expr
-
-%%
-
-start
-    : LL_CONTEXT_FILTER filter_expr
-    ;
-
-filter_expr
-    : KW_FILTER_LENGTH '(' filter_length_expr ')'
-
-filter_length_expr
-    : KW_LEN_LT '(' LL_NUMBER ')' { $$ = filter_len_lt_new($3); }
-    ;
-
-/* INCLUDE_RULES */
-
-%%
+#endif

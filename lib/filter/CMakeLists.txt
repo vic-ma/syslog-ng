@@ -10,6 +10,7 @@ set(FILTER_HEADERS
     filter/filter-re.h
     filter/filter-pri.h
     filter/filter-pipe.h
+    filter/filter-length.h
     filter/filter-expr-parser.h
     PARENT_SCOPE
     )
@@ -26,6 +27,7 @@ set(FILTER_SOURCES
     filter/filter-re.c
     filter/filter-pri.c
     filter/filter-pipe.c
+    filter/filter-length.c
     filter/filter-expr-parser.c
     PARENT_SCOPE
     )

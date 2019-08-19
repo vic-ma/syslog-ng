@@ -5,7 +5,8 @@ lib_filter_tests_TESTS		 =              \
 		lib/filter/tests/test_filters_in_list		\
 		lib/filter/tests/test_filters_regexp \
 		lib/filter/tests/test_filters_fop_cmp \
-		lib/filter/tests/test_filters_netmask
+		lib/filter/tests/test_filters_netmask \
+		lib/filter/tests/test_filters_length
 
 EXTRA_DIST += lib/filter/tests/CMakeLists.txt
 
@@ -75,6 +76,15 @@ lib_filter_tests_test_filters_netmask6_SOURCES = 			\
 	lib/filter/tests/test_filters_common.c \
 	lib/filter/tests/test_filters_common.h
 endif
+
+lib_filter_tests_test_filters_length_CFLAGS    = $(TEST_CFLAGS) \
+	-I${top_srcdir}/lib/filter/tests
+lib_filter_tests_test_filters_length_LDADD     = $(TEST_LDADD)  \
+	$(PREOPEN_SYSLOGFORMAT)
+lib_filter_tests_test_filters_length_SOURCES = 			\
+	lib/filter/tests/test_filters_length.c \
+	lib/filter/tests/test_filters_common.c \
+	lib/filter/tests/test_filters_common.h
 
 lib_filter_tests_TESTS += lib/filter/tests/test_filters_statistics
 
