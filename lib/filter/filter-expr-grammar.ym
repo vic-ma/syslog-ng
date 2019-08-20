@@ -110,21 +110,21 @@ filter_expr
 	;
 
 filter_simple_expr
-	: KW_FACILITY '(' filter_fac_list ')'	{ $$ = filter_facility_new($3);  }
-	| KW_FACILITY '(' LL_NUMBER ')'		{ $$ = filter_facility_new(0x80000000 | $3); }
-	| KW_LEVEL    '(' filter_level_list ')' 	{ $$ = filter_level_new($3); }
-	| KW_FILTER   '(' string ')'		{ $$ = filter_call_new($3, configuration); free($3); }
-    | KW_LEN_LT   '(' LL_NUMBER ')' { $$ = filter_len_lt_new($3); }
-    | KW_LEN_LE   '(' LL_NUMBER ')' { $$ = filter_len_le_new($3); }
-    | KW_LEN_GT   '(' LL_NUMBER ')' { $$ = filter_len_gt_new($3); }
-    | KW_LEN_GE   '(' LL_NUMBER ')' { $$ = filter_len_ge_new($3); }
-    | KW_LEN_EQ   '(' LL_NUMBER ')' { $$ = filter_len_eq_new($3); }
-    | KW_LEN_NE   '(' LL_NUMBER ')' { $$ = filter_len_ne_new($3); }
-    | KW_LEN_GTLT '(' LL_NUMBER LL_NUMBER ')' { $$ = filter_len_gtlt_new($3, $4); }
-    | KW_LEN_GTLE '(' LL_NUMBER LL_NUMBER ')' { $$ = filter_len_gtle_new($3, $4); }
-    | KW_LEN_GELT '(' LL_NUMBER LL_NUMBER ')' { $$ = filter_len_gelt_new($3, $4); }
-    | KW_LEN_GELE '(' LL_NUMBER LL_NUMBER ')' { $$ = filter_len_gele_new($3, $4); }
-	| KW_NETMASK  '(' string ')'    { $$ = filter_netmask_new($3); free($3); }
+	: KW_FACILITY '(' filter_fac_list ')'       { $$ = filter_facility_new($3);  }
+	| KW_FACILITY '(' LL_NUMBER ')'             { $$ = filter_facility_new(0x80000000 | $3); }
+	| KW_LEVEL    '(' filter_level_list ')'     { $$ = filter_level_new($3); }
+	| KW_FILTER   '(' string ')'                { $$ = filter_call_new($3, configuration); free($3); }
+	| KW_LEN_LT   '(' LL_NUMBER ')'             { $$ = filter_len_lt_new($3); }
+	| KW_LEN_LE   '(' LL_NUMBER ')'             { $$ = filter_len_le_new($3); }
+	| KW_LEN_GT   '(' LL_NUMBER ')'             { $$ = filter_len_gt_new($3); }
+	| KW_LEN_GE   '(' LL_NUMBER ')'             { $$ = filter_len_ge_new($3); }
+	| KW_LEN_EQ   '(' LL_NUMBER ')'             { $$ = filter_len_eq_new($3); }
+	| KW_LEN_NE   '(' LL_NUMBER ')'             { $$ = filter_len_ne_new($3); }
+	| KW_LEN_GTLT '(' LL_NUMBER LL_NUMBER ')'   { $$ = filter_len_gtlt_new($3, $4); }
+	| KW_LEN_GTLE '(' LL_NUMBER LL_NUMBER ')'   { $$ = filter_len_gtle_new($3, $4); }
+	| KW_LEN_GELT '(' LL_NUMBER LL_NUMBER ')'   { $$ = filter_len_gelt_new($3, $4); }
+	| KW_LEN_GELE '(' LL_NUMBER LL_NUMBER ')'   { $$ = filter_len_gele_new($3, $4); }
+	| KW_NETMASK  '(' string ')'                { $$ = filter_netmask_new($3); free($3); }
   | KW_NETMASK6   '(' string ')'   {
   #if SYSLOG_NG_ENABLE_IPV6
                                     $$ = filter_netmask6_new($3);
