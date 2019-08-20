@@ -42,6 +42,20 @@ _check_argc(gint argc, const gchar *tf_name)
   return TRUE;
 }
 
+static gboolean
+_check_strtol_result(gchar *endptr, const gchar *tf_name)
+{
+  if (*tf_name != '\0' || errno == EINVAL || errno == ERANGE)
+    {
+      GString *error_msg = g_string_new(tf_name);
+      g_string_append(error_msg, " conversion failed: invalid number");
+      msg_error(error_msg->str);
+      g_string_free(error_msg, TRUE);
+      return FALSE;
+    }
+  return TRUE;
+}
+
 static gchar *
 _convert(const char *format, long int num)
 {
@@ -55,7 +69,11 @@ _convert(const char *format, long int num)
       const gchar *tf_name = "($" #radix_name ")";                                          \
       if (!_check_argc(argc, tf_name))                                                      \
         return;                                                                             \
-      long int original = strtol(argv[0]->str, NULL, 0);                                    \
+      errno = 0;                                                                            \
+      gchar *endptr = g_malloc(argv[0]->len);                                               \
+      long int original = strtol(argv[0]->str, &endptr, 0);                                 \
+      if (!_check_strtol_result(endptr, tf_name))                                           \
+        return;                                                                             \
       gchar *converted = _convert(#print_format, original);                                 \
       g_string_append(result, converted);                                                   \
       g_free(converted);                                                                    \

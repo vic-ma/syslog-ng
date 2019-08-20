@@ -64,7 +64,14 @@ Test(radix_funcs, test_radix_funcs)
   assert_template_format("$(oct 0x10)", "20");
   assert_template_format("$(oct 010)", "10");
 
-  assert_template_format("$(dec :;<>abc!@#$%^&*()`~'""''')", "0");
-  assert_template_format("$(hex 0xaz)", "a");
-  assert_template_format("$(oct 0000)", "0");
+  assert_template_format("$(dec 2147483647)", "2147483647");
+  assert_template_format("$(hex 0x7fffffff)", "0x7fffffff");
+  assert_template_format("$(oct 017777777777)", "017777777777");
+  assert_template_format("$(dec 2147483648)", "");
+  assert_template_format("$(hex 0x80000000)", "");
+  assert_template_format("$(oct 020000000000)", "");
+
+  assert_template_format("$(dec 10a)", "");
+  assert_template_format("$(hex 0x0x)", "");
+  assert_template_format("$(oct 09)", "");
 }
