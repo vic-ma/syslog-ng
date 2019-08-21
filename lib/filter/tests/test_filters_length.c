@@ -49,13 +49,13 @@ typedef struct _FilterParamLengthSingle
 ParameterizedTestParameters(filter, test_filter_len_lt)
 {
   static FilterParamLengthSingle test_data_list[] =
-    {
-        {.msg = "",                                                 .length = 0,   .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = TRUE},
-    };
+  {
+    {.msg = "",                                                 .length = 0,   .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = TRUE},
+  };
 
   return cr_make_param_array(FilterParamLengthSingle, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
@@ -69,13 +69,13 @@ ParameterizedTest(FilterParamLengthSingle *param, filter, test_filter_len_lt)
 ParameterizedTestParameters(filter, test_filter_len_le)
 {
   static FilterParamLengthSingle test_data_list[] =
-    {
-        {.msg = "",                                                 .length = 0,   .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = TRUE},
-    };
+  {
+    {.msg = "",                                                 .length = 0,   .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = TRUE},
+  };
 
   return cr_make_param_array(FilterParamLengthSingle, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
@@ -90,13 +90,13 @@ ParameterizedTest(FilterParamLengthSingle *param, filter, test_filter_len_le)
 ParameterizedTestParameters(filter, test_filter_len_gt)
 {
   static FilterParamLengthSingle test_data_list[] =
-    {
-        {.msg = "",                                                 .length = 0,   .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = FALSE},
-    };
+  {
+    {.msg = "",                                                 .length = 0,   .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = FALSE},
+  };
 
   return cr_make_param_array(FilterParamLengthSingle, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
@@ -110,13 +110,13 @@ ParameterizedTest(FilterParamLengthSingle *param, filter, test_filter_len_gt)
 ParameterizedTestParameters(filter, test_filter_len_ge)
 {
   static FilterParamLengthSingle test_data_list[] =
-    {
-        {.msg = "",                                                 .length = 0,   .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = FALSE},
-    };
+  {
+    {.msg = "",                                                 .length = 0,   .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = FALSE},
+  };
 
   return cr_make_param_array(FilterParamLengthSingle, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
@@ -130,13 +130,13 @@ ParameterizedTest(FilterParamLengthSingle *param, filter, test_filter_len_ge)
 ParameterizedTestParameters(filter, test_filter_len_eq)
 {
   static FilterParamLengthSingle test_data_list[] =
-    {
-        {.msg = "",                                                 .length = 0,   .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = FALSE},
-    };
+  {
+    {.msg = "",                                                 .length = 0,   .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = FALSE},
+  };
 
   return cr_make_param_array(FilterParamLengthSingle, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
@@ -149,13 +149,13 @@ ParameterizedTest(FilterParamLengthSingle *param, filter, test_filter_len_eq)
 ParameterizedTestParameters(filter, test_filter_len_ne)
 {
   static FilterParamLengthSingle test_data_list[] =
-    {
-        {.msg = "",                                                 .length = 0,   .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = TRUE},
-    };
+  {
+    {.msg = "",                                                 .length = 0,   .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: ",                             .length = -1,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 26,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 27,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .length = 28,  .expected_result = TRUE},
+  };
 
   return cr_make_param_array(FilterParamLengthSingle, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
@@ -181,15 +181,15 @@ typedef struct _FilterParamLengthRange
 ParameterizedTestParameters(filter, test_filter_len_gtlt)
 {
   static FilterParamLengthRange test_data_list[] =
-    {
-        {.msg = "",                                                 .min = 0,  .max = 0,   .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: ",                             .min = -1,  .max = 1,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: ",                             .min = 1,  .max = -1,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 28,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 27,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 27,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 28,  .expected_result = FALSE},
-    };
+  {
+    {.msg = "",                                                 .min = 0,  .max = 0,   .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: ",                             .min = -1,  .max = 1,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: ",                             .min = 1,  .max = -1,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 28,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 27,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 27,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 28,  .expected_result = FALSE},
+  };
 
   return cr_make_param_array(FilterParamLengthRange, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
@@ -203,17 +203,17 @@ ParameterizedTest(FilterParamLengthRange *param, filter, test_filter_len_gtlt)
 ParameterizedTestParameters(filter, test_filter_len_gtle)
 {
   static FilterParamLengthRange test_data_list[] =
-    {
-        {.msg = "",                                                 .min = 0,  .max = 0,   .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: ",                             .min = -1,  .max = 1,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: ",                             .min = 1,  .max = -1,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 28,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 27,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 27,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 28,  .expected_result = FALSE},
-    };
+  {
+    {.msg = "",                                                 .min = 0,  .max = 0,   .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: ",                             .min = -1,  .max = 1,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: ",                             .min = 1,  .max = -1,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 28,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 27,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 27,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 28,  .expected_result = FALSE},
+  };
 
-    return cr_make_param_array(FilterParamLengthRange, test_data_list,  G_N_ELEMENTS(test_data_list));
+  return cr_make_param_array(FilterParamLengthRange, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
 
 ParameterizedTest(FilterParamLengthRange *param, filter, test_filter_len_gtle)
@@ -225,17 +225,17 @@ ParameterizedTest(FilterParamLengthRange *param, filter, test_filter_len_gtle)
 ParameterizedTestParameters(filter, test_filter_len_gelt)
 {
   static FilterParamLengthRange test_data_list[] =
-    {
-        {.msg = "",                                                 .min = 0,  .max = 0,   .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: ",                             .min = -1,  .max = 1,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: ",                             .min = 1,  .max = -1,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 28,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 27,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 27,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 28,  .expected_result = TRUE},
-    };
+  {
+    {.msg = "",                                                 .min = 0,  .max = 0,   .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: ",                             .min = -1,  .max = 1,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: ",                             .min = 1,  .max = -1,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 28,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 27,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 27,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 28,  .expected_result = TRUE},
+  };
 
-    return cr_make_param_array(FilterParamLengthRange, test_data_list,  G_N_ELEMENTS(test_data_list));
+  return cr_make_param_array(FilterParamLengthRange, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
 
 ParameterizedTest(FilterParamLengthRange *param, filter, test_filter_len_gelt)
@@ -247,17 +247,17 @@ ParameterizedTest(FilterParamLengthRange *param, filter, test_filter_len_gelt)
 ParameterizedTestParameters(filter, test_filter_len_gele)
 {
   static FilterParamLengthRange test_data_list[] =
-    {
-        {.msg = "",                                                 .min = 0,  .max = 0,   .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: ",                             .min = -1,  .max = 1,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: ",                             .min = 1,  .max = -1,  .expected_result = FALSE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 28,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 27,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 27,  .expected_result = TRUE},
-        {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 28,  .expected_result = TRUE},
-    };
+  {
+    {.msg = "",                                                 .min = 0,  .max = 0,   .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: ",                             .min = -1,  .max = 1,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: ",                             .min = 1,  .max = -1,  .expected_result = FALSE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 28,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 27,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 26, .max = 27,  .expected_result = TRUE},
+    {.msg = "<15> openvpn[2499]: PTHREAD support initialized",  .min = 27, .max = 28,  .expected_result = TRUE},
+  };
 
-    return cr_make_param_array(FilterParamLengthRange, test_data_list,  G_N_ELEMENTS(test_data_list));
+  return cr_make_param_array(FilterParamLengthRange, test_data_list,  G_N_ELEMENTS(test_data_list));
 }
 
 ParameterizedTest(FilterParamLengthRange *param, filter, test_filter_len_gele)

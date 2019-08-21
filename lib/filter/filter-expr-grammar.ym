@@ -38,38 +38,6 @@
 #include "filter/filter-in-list.h"
 #include "filter/filter-tags.h"
 #include "filter/filter-call.h"
-#include "filter/filter-re.h"
-#include "filter/filter-pri.h"
-#include "filter/filter-length.h"
-#include "messages.h"
-#include "template/templates.h"
-#include "syslog-names.h"
-#include "plugin.h"
-#include "cfg-grammar.h"
-
-FilterExprNode *last_filter_expr;
-
-}
-
-%name-prefix "filter_expr_"
-%lex-param {CfgLexer *lexer}
-%parse-param {CfgLexer *lexer}
-%parse-param {FilterExprNode **result}
-%parse-param {gpointer arg}
-
-/* INCLUDE_DECLS */
-
-%token KW_PROGRAM
-%token KW_IN_LIST
-%token KW_VALUE
-
-%token KW_LEN_LT
-%token KW_LEN_LE
-%token KW_LEN_GT
-%token KW_LEN_GE
-%token KW_LEN_EQ
-%token KW_LEN_NE
-%token KW_LEN_GTLT
 %token KW_LEN_GTLE
 %token KW_LEN_GELT
 %token KW_LEN_GELE
@@ -101,7 +69,7 @@ start
 
 filter_expr
 	: filter_simple_expr			{ $$ = $1; if (!$1) YYERROR; }
-        | KW_NOT filter_expr			{ ((FilterExprNode *) $2)->comp = !(((FilterExprNode *) $2)->comp); $$ = $2; }
+	| KW_NOT filter_expr			{ ((FilterExprNode *) $2)->comp = !(((FilterExprNode *) $2)->comp); $$ = $2; }
 	| filter_expr KW_OR filter_expr		{ $$ = fop_or_new($1, $3); }
 	| filter_expr KW_AND filter_expr	{ $$ = fop_and_new($1, $3); }
 	| filter_expr ';' filter_expr	        { $$ = fop_and_new($1, $3); }
