@@ -27,9 +27,9 @@
 
 typedef struct _OrderedParser
 {
-    LogParser super;
-    gchar suffix;
-    guint32 flags;
+  LogParser super;
+  gchar suffix;
+  guint32 flags;
 } OrderedParser;
 
 LogParser *ordered_parser_new(GlobalConfig *cfg);

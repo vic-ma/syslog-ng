@@ -31,9 +31,9 @@ enum
 
 CfgFlagHandler ordered_parser_flag_handlers[] =
 {
-    { "letters",        CFH_SET, offsetof(OrderedParser, flags), OPF_LETTERS},
-    { "numbers",        CFH_SET, offsetof(OrderedParser, flags), OPF_NUMBERS},
-    { NULL },
+  { "letters",        CFH_SET, offsetof(OrderedParser, flags), OPF_LETTERS},
+  { "numbers",        CFH_SET, offsetof(OrderedParser, flags), OPF_NUMBERS},
+  { NULL },
 };
 
 gboolean
