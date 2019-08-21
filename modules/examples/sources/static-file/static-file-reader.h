@@ -29,7 +29,7 @@
 
 typedef struct _StaticFileReader
 {
-    FILE *file;
+  FILE *file;
 } StaticFileReader;
 
 StaticFileReader *sfr_new(void);

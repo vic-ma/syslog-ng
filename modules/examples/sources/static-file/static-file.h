@@ -32,9 +32,9 @@
 
 typedef struct _StaticFileSourceDriver
 {
-    LogThreadedFetcherDriver super;
-    StaticFileReader *reader;
-    gchar *pathname;
+  LogThreadedFetcherDriver super;
+  StaticFileReader *reader;
+  gchar *pathname;
 } StaticFileSourceDriver;
 
 LogDriver *static_file_sd_new(gchar *pathname, GlobalConfig *cfg);
