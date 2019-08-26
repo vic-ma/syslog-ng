@@ -45,7 +45,7 @@ _check_argc(gint argc, const gchar *tf_name)
 static gboolean
 _check_strtol_result(gchar *endptr, const gchar *tf_name)
 {
-  if (*tf_name != '\0' || errno == EINVAL || errno == ERANGE)
+  if (*endptr != '\0' || errno == EINVAL || errno == ERANGE)
     {
       GString *error_msg = g_string_new(tf_name);
       g_string_append(error_msg, " conversion failed: invalid number");

@@ -30,11 +30,51 @@
 #include "logmsg/logmsg.h"
 #include "scratch-buffers.h"
 
+static void
+add_dummy_template_to_configuration(void)
+{
+  LogTemplate *dummy = log_template_new(configuration, "dummy");
+  cr_assert(log_template_compile(dummy, "dummy template expanded $HOST", NULL),
+            "Unexpected error compiling dummy template");
+  cfg_tree_add_template(&configuration->tree, dummy);
+}
+
+static void
+_log_msg_free(gpointer data, gpointer user_data)
+{
+  log_msg_unref((LogMessage *) data);
+}
+
+static GPtrArray *
+create_log_messages_with_values(const gchar *name, const gchar **values)
+{
+  LogMessage *message;
+  GPtrArray *messages = g_ptr_array_new();
+
+  const gchar **value;
+  for (value = values; *value != NULL; ++value)
+    {
+      message = create_empty_message();
+      log_msg_set_value_by_name(message, name, *value, -1);
+      g_ptr_array_add(messages, message);
+    }
+
+  return messages;
+}
+
+static void
+free_log_message_array(GPtrArray *messages)
+{
+  g_ptr_array_foreach(messages, _log_msg_free, NULL);
+  g_ptr_array_free(messages, TRUE);
+}
+
 void
 setup(void)
 {
   app_startup();
   init_template_tests();
+  add_dummy_template_to_configuration();
   cfg_load_module(configuration, "examples");
 }
 
@@ -42,6 +82,7 @@ void
 teardown(void)
 {
   deinit_template_tests();
+  scratch_buffers_explicit_gc();
   app_shutdown();
 }
 
