@@ -64,6 +64,17 @@ static CfgLexerKeyword filter_expr_keywords[] =
   { "value",              KW_VALUE },
   { "flags",              KW_FLAGS },
 
+  { "len_lt",             KW_LEN_LT   },
+  { "len_le",             KW_LEN_LE   },
+  { "len_gt",             KW_LEN_GT   },
+  { "len_ge",             KW_LEN_GE   },
+  { "len_eq",             KW_LEN_EQ   },
+  { "len_ne",             KW_LEN_NE   },
+  { "len_gtlt",           KW_LEN_GTLT },
+  { "len_gtle",           KW_LEN_GTLE },
+  { "len_gelt",           KW_LEN_GELT },
+  { "len_gele",           KW_LEN_GELE },
+
   { NULL }
 };
 

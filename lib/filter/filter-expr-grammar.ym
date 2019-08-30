@@ -40,6 +40,7 @@
 #include "filter/filter-call.h"
 #include "filter/filter-re.h"
 #include "filter/filter-pri.h"
+#include "filter/filter-length.h"
 #include "messages.h"
 #include "template/templates.h"
 #include "syslog-names.h"
@@ -61,6 +62,18 @@ FilterExprNode *last_filter_expr;
 %token KW_PROGRAM
 %token KW_IN_LIST
 %token KW_VALUE
+
+%token KW_LEN_LT
+%token KW_LEN_LE
+%token KW_LEN_GT
+%token KW_LEN_GE
+%token KW_LEN_EQ
+%token KW_LEN_NE
+%token KW_LEN_GTLT
+
+%token KW_LEN_GTLE
+%token KW_LEN_GELT
+%token KW_LEN_GELE
 
 %left   ';'
 %left	KW_OR
@@ -140,6 +153,16 @@ filter_simple_expr
             free($3);
             free($6);
           }
+	| KW_LEN_LT   '(' LL_NUMBER ')'             { $$ = filter_len_lt_new($3); }
+	| KW_LEN_LE   '(' LL_NUMBER ')'             { $$ = filter_len_le_new($3); }
+	| KW_LEN_GT   '(' LL_NUMBER ')'             { $$ = filter_len_gt_new($3); }
+	| KW_LEN_GE   '(' LL_NUMBER ')'             { $$ = filter_len_ge_new($3); }
+	| KW_LEN_EQ   '(' LL_NUMBER ')'             { $$ = filter_len_eq_new($3); }
+	| KW_LEN_NE   '(' LL_NUMBER ')'             { $$ = filter_len_ne_new($3); }
+	| KW_LEN_GTLT '(' LL_NUMBER LL_NUMBER ')'   { $$ = filter_len_gtlt_new($3, $4); }
+	| KW_LEN_GTLE '(' LL_NUMBER LL_NUMBER ')'   { $$ = filter_len_gtle_new($3, $4); }
+	| KW_LEN_GELT '(' LL_NUMBER LL_NUMBER ')'   { $$ = filter_len_gelt_new($3, $4); }
+	| KW_LEN_GELE '(' LL_NUMBER LL_NUMBER ')'   { $$ = filter_len_gele_new($3, $4); }
 	| filter_re					{ $$ = last_filter_expr; }
 	| filter_plugin
 	| filter_comparison
