@@ -32,6 +32,7 @@ extern CfgParser threaded_random_generator_parser;
 #endif
 
 extern CfgParser threaded_diskq_source_parser;
+extern CfgParser static_file_parser;
 
 static Plugin example_plugins[] =
 {
@@ -52,6 +53,11 @@ static Plugin example_plugins[] =
     .name = "example_diskq_source",
     .parser = &threaded_diskq_source_parser,
   },
+  {
+    .type = LL_CONTEXT_SOURCE,
+    .name = "example_static_file",
+    .parser = &static_file_parser,
+  }
 };
 
 gboolean
