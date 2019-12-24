@@ -29,6 +29,8 @@ typedef struct _OrderedParser
 {
   LogParser super;
   gchar suffix;
+  gchar *prefix;
+  gsize prefix_len;
   guint32 flags;
 } OrderedParser;
 
@@ -36,5 +38,6 @@ LogParser *ordered_parser_new(GlobalConfig *cfg);
 gboolean ordered_parser_process_flag(LogParser *s, const gchar *flag);
 gboolean ordered_parser_suffix_valid(gchar suffix);
 void ordered_parser_set_suffix(LogParser *s, gchar suffix);
+void ordered_parser_set_prefix(LogParser *s, gchar *prefix);
 
 #endif

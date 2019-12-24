@@ -124,8 +124,7 @@ Test(ordered_parser, colon_suffix)
 Test(ordered_parser, mixed)
 {
   LogMessage *msg;
-
-  ordered_parser_process_flag(ordered_parser, "letters");
+  ordered_parser_process_flag(ordered_parser, "numbers");
   ordered_parser_set_suffix(ordered_parser, ':');
   msg = parse_ordered_list_into_log_message("1: Apple 2: Banana 3: Cherry");
   assert_log_message_value_by_name(msg, "1", "Apple");
@@ -144,6 +143,20 @@ Test(ordered_parser, varying_spaces)
   assert_log_message_value_by_name(msg, "A", "Apple");
   assert_log_message_value_by_name(msg, "B", "Banana");
   assert_log_message_value_by_name(msg, "C", "Cherry");
+  log_msg_unref(msg);
+}
+
+Test(ordered_parser, prefix)
+{
+  LogMessage *msg;
+  OrderedParser *self = (OrderedParser *) ordered_parser;
+
+  ordered_parser_set_suffix(ordered_parser, ')');
+  ordered_parser_set_prefix(ordered_parser, "op.");
+  msg = parse_ordered_list_into_log_message("A) Apple B) Banana C) Cherry");
+  assert_log_message_value_by_name(msg, "op.A", "Apple");
+  assert_log_message_value_by_name(msg, "op.B", "Banana");
+  assert_log_message_value_by_name(msg, "op.C", "Cherry");
   log_msg_unref(msg);
 }
 

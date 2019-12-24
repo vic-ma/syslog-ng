@@ -32,6 +32,7 @@ static CfgLexerKeyword ordered_parser_keywords[] =
 {
   { "example_ordered_parser", KW_ORDERED_PARSER },
   { "suffix",                 KW_SUFFIX },
+  { "prefix",                 KW_PREFIX },
   { NULL }
 };
 
